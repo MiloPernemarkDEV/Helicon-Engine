@@ -1,8 +1,7 @@
 #pragma once
 
 
-#include <winnt.h>
-#include <profileapi.h>
+#include "Windows.h"
 #include "dllDefines.h"
 
 class ENGINE_API coreTime
