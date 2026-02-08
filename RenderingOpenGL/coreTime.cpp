@@ -1,7 +1,7 @@
 #include "coreTime.h"
 
-LARGE_INTEGER coreTime::lastCounter;
-double coreTime::frequency = 0.0f;
+LARGE_INTEGER coreTime::s_LastCounter;
+double coreTime::s_Frequency = 0.0f;
 double coreTime::s_DeltaTime = 0.0f;
 double coreTime::s_TotalTime = 0.0f;
 int coreTime::s_FrameCount = 0;
@@ -10,7 +10,7 @@ void coreTime::Init()
 {
 	LARGE_INTEGER freq;
 	QueryPerformanceFrequency(&freq);
-	frequency = static_cast<double>(freq.QuadPart);
+	s_Frequency = static_cast<double>(freq.QuadPart);
 
 	Reset();
 }
@@ -20,8 +20,8 @@ void coreTime::Update()
 	LARGE_INTEGER now;
 	QueryPerformanceCounter(&now);
 
-	s_DeltaTime = static_cast<double>(now.QuadPart - lastCounter.QuadPart) / frequency;
-	lastCounter = now;
+	s_DeltaTime = static_cast<double>(now.QuadPart - s_LastCounter.QuadPart) / s_Frequency;
+	s_LastCounter = now;
 
 	s_TotalTime += s_DeltaTime;
 	s_FrameCount++;
@@ -29,7 +29,7 @@ void coreTime::Update()
 
 void coreTime::Reset() {
 
-	QueryPerformanceCounter(&lastCounter);
+	QueryPerformanceCounter(&s_LastCounter);
 
 	s_DeltaTime = 0.0f;
 	s_TotalTime = 0.0f;

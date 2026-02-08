@@ -20,8 +20,8 @@ public:
 	
 
 private:
-	static LARGE_INTEGER lastCounter;
-	static double frequency;
+	static LARGE_INTEGER s_LastCounter;
+	static double s_Frequency;
 
 	static double s_DeltaTime;
 	static double s_TotalTime;

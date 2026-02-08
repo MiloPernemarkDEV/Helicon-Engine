@@ -27,11 +27,11 @@ public:
 
     GLFWwindow* GetGLFWwindow() const { return m_Window; }
 
-    int GetWidth() const { return windowWidth; }
-    int GetHeight() const { return windowHeight; }
+    int GetWidth() const { return WINDOW_WIDTH; }
+    int GetHeight() const { return WINDOW_HEIGHT; }
 
 private:
     GLFWwindow* m_Window;
-    const int windowWidth;
-    const int windowHeight;
+    const int WINDOW_WIDTH;
+    const int WINDOW_HEIGHT;
 };

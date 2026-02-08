@@ -1,7 +1,7 @@
 #include "window.h"
 
 window::window()
-    : m_Window(nullptr), windowWidth(800), windowHeight(800)
+    : m_Window(nullptr), WINDOW_WIDTH(800), WINDOW_HEIGHT(800)
 {
 }
 
@@ -34,7 +34,7 @@ void window::SetContext()
 
 bool window::Create()
 {
-    m_Window = glfwCreateWindow(windowWidth, windowHeight, "USS-CALLIOPE", NULL, NULL);
+    m_Window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "USS-CALLIOPE", NULL, NULL);
     
     return (m_Window != nullptr);
 }
