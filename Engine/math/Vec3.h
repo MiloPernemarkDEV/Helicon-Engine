@@ -112,7 +112,7 @@ struct Vec3 {
 
 	FORCE_INLINE bool isNormalized() const
 	{
-		return isFloatCloseEnough(magnitudeSquared(), 1.0f, 0.001f);
+		return isFloatCloseEnough(magnitudeSquared(), 1.0f, 0.001f);//
 	}
 
 	FORCE_INLINE Vec3 lerp(const Vec3& other, const float& t) const
@@ -188,6 +188,8 @@ struct Vec3 {
 		);
 	}
 
+	/*
+	* Might not need or want this...
 	FORCE_INLINE constexpr Vec3 operator/(const Vec3& other) const
 	{
 		// per component zero checks
@@ -198,6 +200,7 @@ struct Vec3 {
 			z / other.z
 		);
 	}
+	*/
 
 	FORCE_INLINE Vec3 operator*(const float& s) const
 	{
@@ -213,11 +216,8 @@ struct Vec3 {
 		return isFloatCloseEnough(distanceSquared(other), 0.0f, FLT_EPSILON * FLT_EPSILON);
 	}
 
+	FORCE_INLINE  static bool isFloatCloseEnough(float a, float b, float precision = 1e-4f)
+	{
+		return abs(b - a) <= precision;
+	}
 };
-
-FORCE_INLINE  static bool isFloatCloseEnough(float a, float b, float precision = 1e-4f)
-{
-	return abs(b-a) <= precision;
-}
-
-
