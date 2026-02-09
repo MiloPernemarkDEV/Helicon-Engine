@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(OutDir);C:\Dev\PersonalProjects\HeliconEngine\RenderingOpenGL;C:\Dev\PersonalProjects\HeliconEngine;C:\Dev\PersonalProjects\HeliconEngine\libraries\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir);C:\Dev\PersonalProjects\HeliconEngine\Engine;C:\Dev\PersonalProjects\HeliconEngine;C:\Dev\PersonalProjects\HeliconEngine\libraries\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -139,7 +139,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(OutDir);C:\Dev\PersonalProjects\HeliconEngine\RenderingOpenGL;C:\Dev\PersonalProjects\HeliconEngine;C:\Dev\PersonalProjects\HeliconEngine\libraries\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir);C:\Dev\PersonalProjects\HeliconEngine\Engine;C:\Dev\PersonalProjects\HeliconEngine;C:\Dev\PersonalProjects\HeliconEngine\libraries\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\glad.c" />
+    <ClCompile Include="GLContext.cpp" />
+    <ClCompile Include="coreTime.cpp" />
+    <ClCompile Include="window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dllDefines.h" />
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="GLContext.h" />
+    <ClInclude Include="macroIncludes.h" />
+    <ClInclude Include="coreTime.h" />
+    <ClInclude Include="window.h" />
+    <ClInclude Include="math\mathDefines.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\Vec3.h">
+      <Filter>math</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="math">
+      <UniqueIdentifier>{f76dba8f-2fb4-4fc0-8785-e683f46e0f1e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

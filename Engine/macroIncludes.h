@@ -1,4 +1,4 @@
 #pragma once
 
-#include "mathDefines.h"
+#include "math/mathDefines.h"
 #include "dllDefines.h"
