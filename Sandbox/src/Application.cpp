@@ -8,19 +8,18 @@ Application::InitResult Application::Launch()
 	if (!m_Window.Init()) 
 	{
 		return InitResult::Error;
-		HEL_ERROR("Failed to initialize window.");
+		HEL_ERROR("Launch Failed.");
 	}
 
 	m_CoreTime.Init();
 
-	HEL_DEBUG("Application launched successfully.");
+	HEL_INFO("launch Complete.");
 	return InitResult::Success;
 }
 
 void Application::Run()
 {
 
-	HEL_INFO("Application is running.");
 	while (!m_Window.ShouldCloseWindow())
 	{
 		m_CoreTime.Update();
@@ -33,5 +32,5 @@ void Application::End()
 
 	m_CoreTime.Shutdown();
 	m_Window.Shutdown();
-	HEL_DEBUG("Application shutdown successfully.");
+	HEL_INFO("Shutdown Complete.");
 }

@@ -12,6 +12,8 @@
 		m_Frequency = static_cast<double>(freq.QuadPart);
 
 		Reset();
+
+		HEL_DEBUG("Initialized coreTime.");
 	}
 
 	void coreTime::Update()
@@ -45,4 +47,6 @@
 	void coreTime::Shutdown() 
 	{
 		Reset();
+		HEL_DEBUG("Shutdown coreTime.");
+
 	}

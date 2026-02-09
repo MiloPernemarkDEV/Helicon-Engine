@@ -4,6 +4,7 @@
 #include "GLFW/glfw3.h"
 #include <string>
 #include "../core/dllDefines.h"
+#include "../core/Logger.h"
 
 
 

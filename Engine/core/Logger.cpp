@@ -13,6 +13,7 @@ namespace Helicon
     {
         static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
         plog::init(plog::debug, &consoleAppender);
+        HEL_DEBUG("Initialized logger.");
     }
 
         void Logger::HLog(LogLevel level, const char* message) {

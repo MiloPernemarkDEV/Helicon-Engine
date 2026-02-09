@@ -3,6 +3,7 @@
 
 #include "window.h"
 
+
 window::window()
     : m_Window(nullptr), WINDOW_WIDTH(800), WINDOW_HEIGHT(800)
 {
@@ -27,7 +28,7 @@ bool window::Init()
 
     SetWindowIcon("../Engine/assets/Icons/icon.png");
 
-
+    HEL_DEBUG("Initialized window.");
     return true;
 }
 
@@ -76,6 +77,7 @@ void window::Shutdown()
         glfwDestroyWindow(m_Window);
 
     glfwTerminate();
+    HEL_DEBUG("Shutdown window.");
 }
 
 void window::SetWindowIcon(const char* path)
