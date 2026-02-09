@@ -131,13 +131,13 @@
       <UndefinePreprocessorDefinitions>
       </UndefinePreprocessorDefinitions>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Dev\PersonalProjects\HeliconEngine\libraries\include;C:\Dev\PersonalProjects\HeliconEngine;C:\Dev\PersonalProjects\HeliconEngine\Engine\3d-party\plog\include;C:\Dev\PersonalProjects\HeliconEngine\Engine\3d-party\plog\include\plog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\include;$(SolutionDir);$(SolutionDir)\Engine\3d-party\plog\include;$(SolutionDir)\Engine\3d-party\plog\include\plog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Dev\PersonalProjects\HeliconEngine\libraries\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)libraries\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -149,12 +149,12 @@
       <PreprocessorDefinitions>ENGINE_EXPORTS;_AMD64_</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Dev\PersonalProjects\HeliconEngine\libraries\include;C:\Dev\PersonalProjects\HeliconEngine;C:\Dev\PersonalProjects\HeliconEngine\Engine\3d-party\plog\include;C:\Dev\PersonalProjects\HeliconEngine\Engine\3d-party\plog\include\plog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libraries\include;$(SolutionDir);$(SolutionDir)\Engine\3d-party\plog\include;$(SolutionDir)\Engine\3d-party\plog\include\plog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Dev\PersonalProjects\HeliconEngine\libraries\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)libraries\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
