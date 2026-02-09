@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
+    <ClInclude Include="VectormathTesting.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -127,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(OutDir);$(SolutionDir)Engine;$(SolutionDir);$(SolutionDir)libraries\include;$(SolutionDir)Engine\renderer</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir);$(SolutionDir)Engine;$(SolutionDir);$(SolutionDir)libraries\include;$(SolutionDir)Engine\renderer;$(SolutionDir)Engine\math;$(SolutionDir)Sandbox</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -146,7 +147,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(OutDir);$(SolutionDir)Engine;$(SolutionDir);$(SolutionDir)libraries\include;$(SolutionDir)Engine\renderer</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir);$(SolutionDir)Engine;$(SolutionDir);$(SolutionDir)libraries\include;$(SolutionDir)Engine\renderer;$(SolutionDir)Engine\math;$(SolutionDir)Sandbox</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
