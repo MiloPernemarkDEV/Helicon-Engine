@@ -25,7 +25,7 @@ bool window::Init()
 
     glfwMakeContextCurrent(m_Window);
 
-    SetWindowIcon("../Engine/assets/Icons/icon.png"); // relative to bin/Debug-x64
+    SetWindowIcon("../Engine/assets/Icons/icon.png");
 
 
     return true;

@@ -8,7 +8,7 @@ int main ()
 	{
 		return 1;
 	}
-	
+
 	app.Run();
 
 	app.End();

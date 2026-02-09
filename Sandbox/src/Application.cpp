@@ -2,10 +2,13 @@
 
 Application::InitResult Application::Launch()
 {
+
+	Helicon::Logger::Init();
+
 	if (!m_Window.Init()) 
 	{
 		return InitResult::Error;
-		// Log
+		HEL_ERROR("Failed to initialize window.");
 	}
 
 	m_CoreTime.Init();

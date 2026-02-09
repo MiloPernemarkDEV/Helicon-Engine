@@ -2,6 +2,7 @@
 
 #include "window.h"
 #include "core/coreTime.h"
+#include "core/Logger.h"
 #include <iostream>
 
 // We are not using the constructors for initializing the sytems because
