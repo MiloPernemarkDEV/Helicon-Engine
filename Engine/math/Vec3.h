@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../macroIncludes.h"
+#include "core/mathDefines.h"
 #include <cmath>
 
 struct Vec3 {

@@ -1,28 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\glad.c" />
-    <ClCompile Include="GLContext.cpp" />
-    <ClCompile Include="coreTime.cpp" />
-    <ClCompile Include="window.cpp" />
+    <ClCompile Include="core\coreTime.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\GLContext.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\window.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\glad.c">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dllDefines.h" />
     <ClInclude Include="Engine.h" />
-    <ClInclude Include="GLContext.h" />
-    <ClInclude Include="macroIncludes.h" />
-    <ClInclude Include="coreTime.h" />
-    <ClInclude Include="window.h" />
-    <ClInclude Include="math\mathDefines.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="math\Vec3.h">
       <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="core\coreTime.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\mathDefines.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\dllDefines.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\GLContext.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\window.h">
+      <Filter>renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
       <UniqueIdentifier>{f76dba8f-2fb4-4fc0-8785-e683f46e0f1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{faa017be-c72c-4744-8103-1a3c800178ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer">
+      <UniqueIdentifier>{c58ea176-18df-43bb-b6f3-13435eba726d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
