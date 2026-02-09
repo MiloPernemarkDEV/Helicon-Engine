@@ -1,9 +1,5 @@
 #include "Logger.h"
 
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX 
-#include <Windows.h>
-
 #include <plog/Log.h>
 #include <plog/Init.h>
 #include <plog/Formatters/TxtFormatter.h>

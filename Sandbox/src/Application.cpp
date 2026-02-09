@@ -13,12 +13,14 @@ Application::InitResult Application::Launch()
 
 	m_CoreTime.Init();
 
+	HEL_DEBUG("Application launched successfully.");
 	return InitResult::Success;
 }
 
 void Application::Run()
 {
 
+	HEL_INFO("Application is running.");
 	while (!m_Window.ShouldCloseWindow())
 	{
 		m_CoreTime.Update();
@@ -31,4 +33,5 @@ void Application::End()
 
 	m_CoreTime.Shutdown();
 	m_Window.Shutdown();
+	HEL_DEBUG("Application shutdown successfully.");
 }

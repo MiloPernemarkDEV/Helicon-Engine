@@ -19,7 +19,7 @@ namespace Helicon
     public:
         static void Init();
 
-        // Variadic template or simple string for logging
+        // Variadic template or simple string for loggings
         static void HLog(LogLevel level, const char* message);
     };
 }
@@ -28,3 +28,4 @@ namespace Helicon
 #define HEL_INFO(msg)  ::Helicon::Logger::HLog(::Helicon::LogLevel::Info, msg)
 #define HEL_WARN(msg)  ::Helicon::Logger::HLog(::Helicon::LogLevel::Warning, msg)
 #define HEL_ERROR(msg) ::Helicon::Logger::HLog(::Helicon::LogLevel::Error, msg)
+#define HEL_DEBUG(msg) ::Helicon::Logger::HLog(::Helicon::LogLevel::Debug, msg)
