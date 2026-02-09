@@ -34,9 +34,6 @@
     <ClInclude Include="renderer\window.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\stb_image.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
