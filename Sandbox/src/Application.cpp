@@ -18,11 +18,11 @@ bool Application::Launch()
 void Application::Run()
 {
 
-	coreTime::Init();
+	// coreTime::Init();
 
 	while (!m_Window.ShouldCloseWindow())
 	{
-		coreTime::Update();
+		// coreTime::Update();
 		m_Window.ProcessEvents();
 	}
 }

@@ -10,7 +10,7 @@ int main ()
 {
 	Application app;
 
-	if (!app.Launch() == true)
+	if (!app.Launch())
 	{
 		return 1;
 	}
