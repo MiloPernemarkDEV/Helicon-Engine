@@ -1,3 +1,6 @@
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include "window.h"
 
 window::window()
@@ -21,6 +24,10 @@ bool window::Init()
     }
 
     glfwMakeContextCurrent(m_Window);
+
+    SetWindowIcon("../Engine/assets/Icons/icon.png"); // relative to bin/Debug-x64
+
+
     return true;
 }
 
@@ -34,7 +41,7 @@ void window::SetContext()
 
 bool window::Create()
 {
-    m_Window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "USS-CALLIOPE", NULL, NULL);
+    m_Window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "BOY BAND BATTLES", NULL, NULL);
     
     return (m_Window != nullptr);
 }
@@ -67,3 +74,24 @@ void window::glfwShutDown()
 {
     glfwTerminate();
 }
+
+void window::SetWindowIcon(const char* path)
+{
+    GLFWimage image;
+    int width, height, channels;
+
+    unsigned char* pixels = stbi_load(path, &width, &height, &channels, 4);
+    if (!pixels)
+    {
+        return;
+    }
+
+    image.width = width;
+    image.height = height;
+    image.pixels = pixels;
+
+    glfwSetWindowIcon(m_Window, 1, &image);
+
+    stbi_image_free(pixels);
+}
+

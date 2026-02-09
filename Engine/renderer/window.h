@@ -22,6 +22,8 @@ public:
     bool ShouldCloseWindow();
     void ProcessEvents();
     void SwapBuffers();
+    void SetWindowIcon(const char* path);
+
     static void glfwShutDown();
 
     GLFWwindow* GetGLFWwindow() const { return m_Window; }
