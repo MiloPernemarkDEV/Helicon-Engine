@@ -9,8 +9,6 @@
 // therefore we state the correct order inside the member functions instead 
 // some systems might depend on eachother thats why this is important 
 
-// Explore using a enum for error handling the initialized system if something in the system fails 
-
 class Application
 {
 public:

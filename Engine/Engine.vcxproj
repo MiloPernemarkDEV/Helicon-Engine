@@ -131,7 +131,7 @@
       <UndefinePreprocessorDefinitions>
       </UndefinePreprocessorDefinitions>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Dev\PersonalProjects\HeliconEngine\libraries\include;C:\Dev\PersonalProjects\HeliconEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\PersonalProjects\HeliconEngine\libraries\include;C:\Dev\PersonalProjects\HeliconEngine;C:\Dev\PersonalProjects\HeliconEngine\Engine\3d-party\plog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,7 +149,7 @@
       <PreprocessorDefinitions>ENGINE_EXPORTS;_AMD64_</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Dev\PersonalProjects\HeliconEngine\libraries\include;C:\Dev\PersonalProjects\HeliconEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\PersonalProjects\HeliconEngine\libraries\include;C:\Dev\PersonalProjects\HeliconEngine;C:\Dev\PersonalProjects\HeliconEngine\Engine\3d-party\plog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -5,6 +5,7 @@ Application::InitResult Application::Launch()
 	if (!m_Window.Init()) 
 	{
 		return InitResult::Error;
+		// Log
 	}
 
 	m_CoreTime.Init();

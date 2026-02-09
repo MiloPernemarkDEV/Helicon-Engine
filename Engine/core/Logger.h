@@ -1,0 +1,8 @@
+#pragma 
+
+class Logger
+{
+public:
+	
+};
+
