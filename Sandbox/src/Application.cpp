@@ -1,28 +1,23 @@
 #include "Application.h"
 
-Application::Application()
-{
-
-}
-
-bool Application::Launch()
+Application::InitResult Application::Launch()
 {
 	if (!m_Window.Init()) 
 	{
-		return false;
+		return InitResult::Error;
 	}
 
-	return true;
+	m_CoreTime.Init();
+
+	return InitResult::Success;
 }
 
 void Application::Run()
 {
 
-	// coreTime::Init();
-
 	while (!m_Window.ShouldCloseWindow())
 	{
-		// coreTime::Update();
+		m_CoreTime.Update();
 		m_Window.ProcessEvents();
 	}
 }
@@ -30,7 +25,6 @@ void Application::Run()
 void Application::End()
 {
 
-
-
-	window::glfwShutDown();
+	m_CoreTime.Shutdown();
+	m_Window.Shutdown();
 }

@@ -133,7 +133,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Configuration)-$(Platform)\RenderingOpenGL\;C:\Dev\PersonalProjects\HeliconEngine\bin\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Configuration)-$(Platform)\RenderingOpenGL\;C:\Dev\PersonalProjects\HeliconEngine\bin\Debug;C:\Dev\PersonalProjects\HeliconEngine\bin\Debug-x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -152,7 +152,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Engine.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Configuration)-$(Platform)\RenderingOpenGL\;C:\Dev\PersonalProjects\HeliconEngine\bin\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Configuration)-$(Platform)\RenderingOpenGL\;C:\Dev\PersonalProjects\HeliconEngine\bin\Debug;C:\Dev\PersonalProjects\HeliconEngine\bin\Debug-x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

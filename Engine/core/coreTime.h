@@ -7,25 +7,25 @@
 class ENGINE_API coreTime
 {
 public:
-	static void Init();
+	 void Init();
 
-	static void Update();
+	 void Update();
 
-	static void Reset();
+	 void Reset();
+	 void Shutdown();
 
-	static double GetAverageFPS();
-	static double GetDeltaTime() { return s_DeltaTime; }
-	static double GetTotalTime() { return s_TotalTime; }
-	static int GetFrameCount() { return s_FrameCount; }
+	 double GetAverageFPS();
+	 double GetDeltaTime() { return m_DeltaTime; }
+	 double GetTotalTime() { return m_TotalTime; }
+	 int GetFrameCount() { return m_FrameCount; }
 	
 
 private:
-	static LARGE_INTEGER s_LastCounter;
-	static double s_Frequency;
-
-	static double s_DeltaTime;
-	static double s_TotalTime;
-	static int s_FrameCount;
+	LARGE_INTEGER m_LastCounter = { 0 };
+	double m_Frequency = 0.0;
+	double m_DeltaTime = 0.0;
+	double m_TotalTime = 0.0;
+	int m_FrameCount = 0;
 };
 
 

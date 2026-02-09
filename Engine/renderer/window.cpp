@@ -70,8 +70,11 @@ void window::SwapBuffers()
         glfwSwapBuffers(m_Window);
 }
 
-void window::glfwShutDown()
+void window::Shutdown()
 {
+    if (m_Window)
+        glfwDestroyWindow(m_Window);
+
     glfwTerminate();
 }
 

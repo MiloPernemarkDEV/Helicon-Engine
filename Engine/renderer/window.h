@@ -24,7 +24,7 @@ public:
     void SwapBuffers();
     void SetWindowIcon(const char* path);
 
-    static void glfwShutDown();
+    void Shutdown();
 
     GLFWwindow* GetGLFWwindow() const { return m_Window; }
 

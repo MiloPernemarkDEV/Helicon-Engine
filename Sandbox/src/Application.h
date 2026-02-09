@@ -14,11 +14,18 @@
 class Application
 {
 public:
-	Application();
+
+	enum class InitResult
+	{
+		Success,
+		Error
+	};
+
+	Application() = default;
 
 	// Initialize systems in correct order and flag if they cant initialize
-	bool Launch();
-
+	InitResult Launch();
+		
 	// Game loop
 	void Run();
 
@@ -27,7 +34,8 @@ public:
 
 private:
 	// add the systems as member variables 
-	window m_Window;
+	window m_Window{};
+	coreTime m_CoreTime{};
 	
 };
 
