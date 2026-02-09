@@ -54,7 +54,7 @@ struct Vec3 {
 
 	FORCE_INLINE Vec3 normalize(const Vec3& other) const
 	{
-
+		//
 	}
 
 
