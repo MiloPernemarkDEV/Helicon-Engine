@@ -11,15 +11,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EntryPoint.cpp">
+    <ClCompile Include="src\Application.cpp">
       <Filter>Private</Filter>
     </ClCompile>
-    <ClCompile Include="Application.cpp">
+    <ClCompile Include="src\EntryPoint.cpp">
       <Filter>Private</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h">
+    <ClInclude Include="src\Application.h">
       <Filter>Public</Filter>
     </ClInclude>
   </ItemGroup>

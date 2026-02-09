@@ -1,7 +1,7 @@
 #pragma once
 
 #include "window.h"
-#include "coreTime.h"
+#include "core/coreTime.h"
 #include <iostream>
 
 // We are not using the constructors for initializing the sytems because
