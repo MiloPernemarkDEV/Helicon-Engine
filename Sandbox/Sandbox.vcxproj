@@ -127,13 +127,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(OutDir);C:\Dev\PersonalProjects\HeliconEngine\Engine;C:\Dev\PersonalProjects\HeliconEngine;C:\Dev\PersonalProjects\HeliconEngine\libraries\include;C:\Dev\PersonalProjects\HeliconEngine\Engine\renderer</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir);$(SolutionDir)Engine;$(SolutionDir);$(SolutionDir)libraries\include;$(SolutionDir)Engine\renderer</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Configuration)-$(Platform)\RenderingOpenGL\;C:\Dev\PersonalProjects\HeliconEngine\bin\Debug;C:\Dev\PersonalProjects\HeliconEngine\bin\Debug-x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Configuration)-$(Platform)\RenderingOpenGL\;$(SolutionDir)bin\Debug;$(SolutionDir)bin\Debug-x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -146,13 +146,13 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(OutDir);C:\Dev\PersonalProjects\HeliconEngine\Engine;C:\Dev\PersonalProjects\HeliconEngine;C:\Dev\PersonalProjects\HeliconEngine\libraries\include;C:\Dev\PersonalProjects\HeliconEngine\Engine\renderer</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir);$(SolutionDir)Engine;$(SolutionDir);$(SolutionDir)libraries\include;$(SolutionDir)Engine\renderer</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Engine.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Configuration)-$(Platform)\RenderingOpenGL\;C:\Dev\PersonalProjects\HeliconEngine\bin\Debug;C:\Dev\PersonalProjects\HeliconEngine\bin\Debug-x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Configuration)-$(Platform)\RenderingOpenGL\;$(SolutionDir)bin\Debug;$(SolutionDir)bin\Debug-x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
