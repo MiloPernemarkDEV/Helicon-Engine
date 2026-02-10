@@ -32,7 +32,18 @@ namespace Helicon
         };
     }
 
-#define HEL_INFO(msg)  ::Helicon::Logger::HLog(::Helicon::LogLevel::Info, msg, __FILE__, __LINE__)
-#define HEL_WARN(msg)  ::Helicon::Logger::HLog(::Helicon::LogLevel::Warning, msg, __FILE__, __LINE__)
-#define HEL_ERROR(msg) ::Helicon::Logger::HLog(::Helicon::LogLevel::Error, msg, __FILE__, __LINE__)
-#define HEL_DEBUG(msg) ::Helicon::Logger::HLog(::Helicon::LogLevel::Debug, msg, __FILE__, __LINE__)
+#ifdef _DEBUG
+
+    #define HEL_INFO(msg)  ::Helicon::Logger::HLog(::Helicon::LogLevel::Info, msg, __FILE__, __LINE__)
+    #define HEL_WARN(msg)  ::Helicon::Logger::HLog(::Helicon::LogLevel::Warning, msg, __FILE__, __LINE__)
+    #define HEL_ERROR(msg) ::Helicon::Logger::HLog(::Helicon::LogLevel::Error, msg, __FILE__, __LINE__)
+    #define HEL_DEBUG(msg) ::Helicon::Logger::HLog(::Helicon::LogLevel::Debug, msg, __FILE__, __LINE__)
+
+#else
+
+#define HEL_INFO(...)
+#define HEL_WARN(...)
+#define HEL_ERROR(...)
+#define HEL_DEBUG(...) 
+
+#endif

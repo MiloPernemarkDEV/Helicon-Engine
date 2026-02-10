@@ -10,7 +10,6 @@
 
 namespace Helicon
 {   
-    
     void Logger::Init() 
     {        
         const std::string logDirectory = "Logs";
