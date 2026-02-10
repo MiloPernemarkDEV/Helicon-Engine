@@ -4,8 +4,7 @@
 
 int main ()
 {
-	
-	
+
 	std::unique_ptr<Application> app = std::make_unique<Application>();
 
 	if (app->Launch() == Application::InitResult::Error)
@@ -16,7 +15,6 @@ int main ()
 	app->Run();	
 
 	app->End();
-
 
 	return 0;
 }

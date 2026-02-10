@@ -2,7 +2,10 @@
 
 Application::InitResult Application::Launch()
 {
+	
+#ifdef _DEBUG
 	Helicon::Logger::Init();
+#endif
 
 	if (!m_Window.Init()) 
 	{

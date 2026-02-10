@@ -6,8 +6,6 @@
 #include "../core/dllDefines.h"
 #include "../core/Logger.h"
 
-
-
 class ENGINE_API window
 {
 public:

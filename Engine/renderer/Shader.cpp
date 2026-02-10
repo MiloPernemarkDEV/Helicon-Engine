@@ -1,16 +1,17 @@
+
 #include "Shader.h"
 
 #include "../core/logger.h"
 #include <fstream>
 #include <sstream>
 
-using namespace Helicon;
-
 // Going to go over this class 100 times until i fully understand it 
 // the basic idea is to load a a shader file from disk that has the vertex and fragment source code 
 // compile the source code so the gpu can understand it, store it in memory and use the id to say hey here it is stupid gpu 
 // the rest is not in my head rn but ill update this documentation 
 // basically openGL got us covered for the most part here 
+
+using namespace Helicon;
 
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 {
