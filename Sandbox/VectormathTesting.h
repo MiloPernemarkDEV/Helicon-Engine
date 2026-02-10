@@ -1,9 +1,15 @@
-#pragma once
-#include "Vec3.h"
-#include <format>
-#include <cassert>
-#include <iostream>
+//#pragma once
+//#include "Vec3.h"
+//#include <format>
+//#include <cassert>
+//#include <iostream>
 
+/*
+* 
+* --DEPRECATED--
+* Now implemented in TestLab project
+* 
+* 
 class VMathTests
 {
 public:
@@ -212,6 +218,6 @@ void VMathTests::RunVec3Tests()
 	TestReflection(Vec3(1, 0, 0), Vec3(1, 0, 0), Vec3(-1, 0, 0));
 	TestReflection(Vec3( 1, -1, 0), Vec3(0, 1, 0), Vec3(1, 1, 0));
 	TestReflection(Vec3(1, -1, 0), Vec3(0, 2, 0), Vec3(1, 1, 0));
-
 }
+*/
 
