@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "VectormathTesting.h"
+#include <memory>
 
 int main ()
 {
@@ -7,17 +8,13 @@ int main ()
 	// testing Vec3 ops
 	VMathTests::RunVec3Tests();
 
-	// main loop
-	Application app;
+	std::unique_ptr<Application> app = std::make_unique<Application>();
 
-	if (app.Launch() == Application::InitResult::Error)
-	{
-		return 1;
-	}
+	if (app->Launch() == Application::InitResult::Error) return 1;
+	
+	app->Run();
 
-	app.Run();
-
-	app.End();
+	app->End();
 
 
 	return 0;

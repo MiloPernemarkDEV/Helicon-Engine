@@ -2,22 +2,21 @@
 
 #include <plog/Log.h>
 #include <plog/Init.h>
-#include <plog/Formatters/TxtFormatter.h>
+#include <plog/Formatters/MessageOnlyFormatter.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
-
 
 namespace Helicon
 {
 
     void Logger::Init() 
     {
-        static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
+        static plog::ConsoleAppender<plog::MessageOnlyFormatter> consoleAppender;
         plog::init(plog::debug, &consoleAppender);
-        HEL_DEBUG("Initialized logger.");
+
+        HEL_DEBUG("Logger Init called");
     }
 
-        void Logger::HLog(LogLevel level, const char* message) {
-    // ANSI Escape Codes
+        void Logger::HLog(LogLevel level, const char* message, const char* file, int line) {
     const char* colorReset = "\x1B[0m";
     const char* colorRed   = "\x1B[31m";
     const char* colorGreen = "\x1B[32m";
@@ -26,16 +25,16 @@ namespace Helicon
 
     switch (level) {
         case LogLevel::Debug:   
-            PLOGD << colorCyan << message << colorReset; 
+            PLOGD << file << ":" << " " << colorCyan << line << "." << " " << message << colorReset;
             break;
         case LogLevel::Info:    
-            PLOGI << colorGreen << message << colorReset; 
+            PLOGI << file << ":" << " " << colorGreen << line << "." << " " << message << colorReset;
             break;
         case LogLevel::Warning: 
-            PLOGW << colorYellow << message << colorReset; 
+            PLOGW << file << ":" << " " << colorYellow << line << "." << " " << message << colorReset;
             break;
         case LogLevel::Error:   
-            PLOGE << colorRed << message << colorReset; 
+            PLOGE << file << ":" << " " << colorRed << line << "." << " " << message << colorReset;
             break;
     }
 }

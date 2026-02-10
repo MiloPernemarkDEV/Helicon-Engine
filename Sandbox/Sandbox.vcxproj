@@ -130,6 +130,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(OutDir);$(SolutionDir)Engine;$(SolutionDir);$(SolutionDir)libraries\include;$(SolutionDir)Engine\renderer;$(SolutionDir)Engine\math;$(SolutionDir)Sandbox</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,6 +149,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(OutDir);$(SolutionDir)Engine;$(SolutionDir);$(SolutionDir)libraries\include;$(SolutionDir)Engine\renderer;$(SolutionDir)Engine\math;$(SolutionDir)Sandbox</AdditionalIncludeDirectories>
+      <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

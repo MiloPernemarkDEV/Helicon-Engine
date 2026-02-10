@@ -28,7 +28,7 @@ bool window::Init()
 
     SetWindowIcon("../Engine/assets/Icons/icon.png");
 
-    HEL_DEBUG("Initialized window.");
+    HEL_DEBUG("Window Init called");
     return true;
 }
 
