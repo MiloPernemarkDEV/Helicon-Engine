@@ -8,6 +8,8 @@
   There is a limit to how many files can be created when it is reached the oldest log file is deleted
 */ 
 
+// Todo, add functionality to clear the log files, not important rightnow
+
 #pragma once
 #include "dllDefines.h" 
 

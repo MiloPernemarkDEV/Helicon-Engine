@@ -42,7 +42,7 @@ void window::SetContext()
 
 bool window::Create()
 {
-    m_Window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "BOY BAND BATTLES", NULL, NULL);
+    m_Window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Sandbox Project", NULL, NULL);
     
     return (m_Window != nullptr);
 }
