@@ -1,11 +1,11 @@
 #include "Application.h"
 //#include "VectormathTesting.h"
-//#include <memory>
+#include <memory>
 
 int main ()
 {
-
-	std::unique_ptr<Application> app = std::make_unique<Application>();
+	
+	std::unique_ptr<Application> app = std::make_unique<Application>(); // Shifting between stack allocating or doing like this
 
 	if (app->LaunchCoreSystems() == Application::LaunchState::Error)
 	{
