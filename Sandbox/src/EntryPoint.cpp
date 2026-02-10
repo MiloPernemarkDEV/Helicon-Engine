@@ -10,7 +10,10 @@ int main ()
 
 	std::unique_ptr<Application> app = std::make_unique<Application>();
 
-	if (app->Launch() == Application::InitResult::Error) return 1;
+	if (app->Launch() == Application::InitResult::Error)
+	{
+		return 1;
+	}
 	
 	app->Run();
 
