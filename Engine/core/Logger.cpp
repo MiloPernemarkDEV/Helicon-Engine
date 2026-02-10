@@ -3,15 +3,29 @@
 #include <plog/Log.h>
 #include <plog/Init.h>
 #include <plog/Formatters/MessageOnlyFormatter.h>
+#include <plog/Formatters/TxtFormatter.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
+#include <plog/Appenders/RollingFileAppender.h>
+#include <filesystem>
 
 namespace Helicon
-{
-
+{   
+    
     void Logger::Init() 
-    {
+    {        
+        const std::string logDirectory = "Logs";
+        if (!std::filesystem::exists(logDirectory))
+        {
+            std::filesystem::create_directory(logDirectory);
+        }
+
         static plog::ConsoleAppender<plog::MessageOnlyFormatter> consoleAppender;
+
+        static plog::RollingFileAppender<plog::TxtFormatter> fileAppender("Logs/Helicon.log", 1000000, 2);
+
         plog::init(plog::debug, &consoleAppender);
+
+        plog::get()->addAppender(&fileAppender);
 
         HEL_DEBUG("Logger Init called");
     }

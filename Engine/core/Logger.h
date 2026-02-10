@@ -2,6 +2,12 @@
   // Logger.h //
   //////////////
 
+/*
+  The logger Logs to a log file and to the console.
+  Each log file has a max size in bytes if it is reached the file gets renamed and a new log file is made
+  There is a limit to how many files can be created when it is reached the oldest log file is deleted
+*/ 
+
 #pragma once
 #include "dllDefines.h" 
 
