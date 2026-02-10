@@ -13,20 +13,21 @@
 
 #include "Windows.h"
 
-#include "DllDefines.h"
-#include "../core/Logger.h"
+#include "ICoreSystem.h"
+#include "dllDefines.h"
+#include "Logger.h"
 
 namespace Helicon 
 {
-	class ENGINE_API Time
+	class ENGINE_API Time : ICoreSystem
 	{
 	public:
-		bool Init();
+		bool Init() override;
 
 		void Update();
 
 		void Reset();
-		void Shutdown();
+		void Shutdown() override;
 
 		double GetAverageFPS();
 		double GetDeltaTime() { return m_DeltaTime; }
