@@ -161,23 +161,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="core\coreTime.cpp" />
     <ClCompile Include="core\Logger.cpp" />
+    <ClCompile Include="core\Time.cpp" />
     <ClCompile Include="renderer\glad.c" />
     <ClCompile Include="renderer\GLContext.cpp" />
     <ClCompile Include="renderer\Shader.cpp" />
-    <ClCompile Include="renderer\window.cpp" />
+    <ClCompile Include="renderer\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="core\coreTime.h" />
-    <ClInclude Include="core\dllDefines.h" />
+    <ClInclude Include="core\DllDefines.h" />
     <ClInclude Include="core\Logger.h" />
-    <ClInclude Include="core\mathDefines.h" />
+    <ClInclude Include="core\MathDefines.h" />
+    <ClInclude Include="core\Time.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="math\Vec3.h" />
     <ClInclude Include="renderer\GLContext.h" />
     <ClInclude Include="renderer\Shader.h" />
-    <ClInclude Include="renderer\window.h" />
+    <ClInclude Include="renderer\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
