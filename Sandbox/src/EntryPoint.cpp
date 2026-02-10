@@ -1,20 +1,27 @@
 #include "Application.h"
 //#include "VectormathTesting.h"
-#include <memory>
+//#include <memory>
 
 int main ()
 {
 
 	std::unique_ptr<Application> app = std::make_unique<Application>();
 
-	if (app->Launch() == Application::InitResult::Error)
+	if (app->LaunchCoreSystems() == Application::LaunchState::Error)
+	{
+		return 1;
+	}
+
+	if (app->LaunchModules() == Application::LaunchState::Error)
 	{
 		return 1;
 	}
 	
-	app->Run();	
+	app->RunGame();	
 
-	app->End();
+	app->ShutdownModules();
+
+	app->ShutdownCoreSystems();
 
 	return 0;
 }

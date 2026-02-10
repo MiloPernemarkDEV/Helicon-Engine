@@ -28,7 +28,7 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 
 	if (isLinked == GL_FALSE)
 	{
-		HEL_ERROR("Shader Linking Failed: {0}");
+		HE_LOG_ERROR("Shader Linking Failed: {0}");
 	}
 
 	glDeleteShader(vs);
@@ -57,7 +57,7 @@ int Shader::GetUniformLocation(const std::string& name) const
 
 	int location = glGetUniformLocation(m_RendererID, name.c_str());
 	if (location == -1)
-		HEL_WARN("Uniform not found!");
+		HE_LOG_WARNING("Uniform not found!");
 
 	m_UniformLocationCache[name] = location;
 	return location;
@@ -86,7 +86,7 @@ std::string Shader::readFile(const std::string& filePath)
 	}
 	else 
 	{
-		HEL_ERROR("Could not open shader file: ");
+		HE_LOG_ERROR("Could not open shader file: ");
 	}
 
 	return result;
@@ -104,7 +104,7 @@ uint32_t Shader::compileShader(uint32_t type, const std::string& source)
 	
 	if (result == GL_FALSE)
 	{
-		HEL_ERROR("Failed to compile {0} shader: {1}");
+		HE_LOG_ERROR("Failed to compile {0} shader: {1}");
 
 		glDeleteShader(id);
 		return 0;

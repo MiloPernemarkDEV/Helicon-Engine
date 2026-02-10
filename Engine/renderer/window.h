@@ -13,12 +13,13 @@
 #include "GLFW/glfw3.h"
 #include <string>
 #include "../core/DllDefines.h"
-#include "../core/Logger.h"
+#include "../core/Logger.h" 
 
 namespace Helicon 
 {
     class ENGINE_API Window
     {
+
     public:
         Window();
         ~Window();

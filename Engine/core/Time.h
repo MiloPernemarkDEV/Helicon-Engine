@@ -21,7 +21,7 @@ namespace Helicon
 	class ENGINE_API Time
 	{
 	public:
-		void Init();
+		bool Init();
 
 		void Update();
 

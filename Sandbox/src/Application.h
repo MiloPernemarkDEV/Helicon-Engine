@@ -14,7 +14,7 @@ class Application
 {
 public:
 
-	enum class InitResult
+	enum class LaunchState
 	{
 		Success,
 		Error
@@ -23,18 +23,23 @@ public:
 	Application() = default;
 
 	// Initialize systems in correct order and flag if they cant initialize
-	InitResult Launch();
+	LaunchState LaunchCoreSystems();
+
+	LaunchState LaunchModules();
 		
 	// Game loop
-	void Run();
+	void RunGame();
 
 	// Shutdown sytems in reverse order
-	void End();
+
+	void ShutdownModules();
+
+	void ShutdownCoreSystems();
 
 private:
 	// add the systems as member variables 
 	Helicon::Window m_Window{};
-	Helicon::Time m_CoreTime{};
+	Helicon::Time m_Time{};
 	
 };
 

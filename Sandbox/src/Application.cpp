@@ -1,38 +1,62 @@
 #include "Application.h"
 
-Application::InitResult Application::Launch()
+
+Application::LaunchState Application::LaunchCoreSystems()
 {
-	
-#ifdef _DEBUG
-	Helicon::Logger::Init();
+
+#ifdef _DEBUG // might be bad to remove logs from release build 
+
+	if (!Helicon::Logger::Init())
+	{
+		HE_LOG_ERROR("Failed to initialize logger");
+		return LaunchState::Error;
+	}
+
 #endif
 
 	if (!m_Window.Init()) 
 	{
-		HEL_ERROR("Failed to initialize window.");
-		return InitResult::Error;
+		HE_LOG_ERROR("Failed to initialize window.");
+		return LaunchState::Error;
 	}
 
-	m_CoreTime.Init();
+	if (!m_Time.Init())
+	{
+		HE_LOG_ERROR("Failed to initialize Time");
+		return LaunchState::Error;
+	}
 
-	return InitResult::Success;
+	return LaunchState::Success;
 }
 
-void Application::Run()
+Application::LaunchState Application::LaunchModules()
+{
+
+	return LaunchState::Success;
+}
+
+
+void Application::RunGame()
 {
 
 	while (!m_Window.ShouldCloseWindow())
 	{
-		m_CoreTime.Update();
+		m_Time.Update();
 		m_Window.ProcessEvents();
 	}
 }
 
-void Application::End()
+
+void Application::ShutdownModules()
+{
+
+}
+
+void Application::ShutdownCoreSystems()
 {
 
 
-	m_CoreTime.Shutdown();
+	m_Time.Shutdown();
 	m_Window.Shutdown();
-	// Shutdown logger last
+	Helicon::Logger::Shutdown();
 }
