@@ -170,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\DllDefines.h" />
+    <ClInclude Include="core\ICoreSystem.h" />
     <ClInclude Include="core\Logger.h" />
     <ClInclude Include="core\MathDefines.h" />
     <ClInclude Include="core\Time.h" />

@@ -14,10 +14,11 @@
 #include <string>
 #include "../core/DllDefines.h"
 #include "../core/Logger.h" 
+#include "../core/ICoreSystem.h"
 
 namespace Helicon 
 {
-    class ENGINE_API Window
+    class ENGINE_API Window : ICoreSystem
     {
 
     public:

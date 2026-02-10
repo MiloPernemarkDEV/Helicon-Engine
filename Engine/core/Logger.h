@@ -14,7 +14,8 @@
 #pragma once
 #include "DllDefines.h" 
 
-namespace Helicon
+
+namespace Helicon 
 {
     enum class LogLevel 
     {
