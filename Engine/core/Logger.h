@@ -19,7 +19,7 @@ namespace Helicon
     public:
         static void Init();
 
-        // Variadic template or simple string for loggings
+        // Variadic template or simple string for loggings  
         static void HLog(LogLevel level, const char* message);
     };
 }

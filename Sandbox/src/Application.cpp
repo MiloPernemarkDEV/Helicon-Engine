@@ -7,8 +7,8 @@ Application::InitResult Application::Launch()
 
 	if (!m_Window.Init()) 
 	{
-		return InitResult::Error;
 		HEL_ERROR("Launch Failed.");
+		return InitResult::Error;
 	}
 
 	m_CoreTime.Init();
@@ -30,7 +30,11 @@ void Application::Run()
 void Application::End()
 {
 
+
 	m_CoreTime.Shutdown();
 	m_Window.Shutdown();
+
 	HEL_INFO("Shutdown Complete.");
+
+	// Shutdown logger
 }
