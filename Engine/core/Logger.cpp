@@ -10,9 +10,10 @@
 
 namespace Helicon
 {   
-    void Logger::Init() 
+    bool Logger::Init() 
     {        
         const std::string logDirectory = "Logs";
+
         if (!std::filesystem::exists(logDirectory))
         {
             std::filesystem::create_directory(logDirectory);
@@ -26,7 +27,9 @@ namespace Helicon
 
         plog::get()->addAppender(&fileAppender);
 
-        HEL_DEBUG("Logger Init called");
+       
+        HLog(LogLevel::Debug, "Logger Init.", __FILE__, __LINE__);
+        return true;
     }
 
     void Logger::HLog(LogLevel level, const char* message, const char* file, int line) 
@@ -53,5 +56,11 @@ namespace Helicon
                 PLOGE << file << ":" << " " << colorRed << line << "." << " " << message << colorReset;
                 break;
         }
+    }
+
+    void Logger::Shutdown()
+    {
+        HE_LOG("Logger shutdown.");
+        // Todo 
     }
 }

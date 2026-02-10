@@ -9,6 +9,7 @@
 */ 
 
 // Todo, add functionality to clear the log files, not important right now
+// Consider adding init/shutdown log macros for each system to be able to adjust them from here instead of every file 
 
 #pragma once
 #include "DllDefines.h" 
@@ -26,24 +27,29 @@ namespace Helicon
     class ENGINE_API Logger 
     {
         public:
-            static void Init();
+            static bool Init();
 
             static void HLog(LogLevel level, const char* message, const char* file, int line);
+
+            // Not doing anything yet 
+            static void Shutdown();
         };
-    }
+}
 
 #ifdef _DEBUG
 
-    #define HEL_INFO(msg)  ::Helicon::Logger::HLog(::Helicon::LogLevel::Info, msg, __FILE__, __LINE__)
-    #define HEL_WARN(msg)  ::Helicon::Logger::HLog(::Helicon::LogLevel::Warning, msg, __FILE__, __LINE__)
-    #define HEL_ERROR(msg) ::Helicon::Logger::HLog(::Helicon::LogLevel::Error, msg, __FILE__, __LINE__)
-    #define HEL_DEBUG(msg) ::Helicon::Logger::HLog(::Helicon::LogLevel::Debug, msg, __FILE__, __LINE__)
+  #define HE_LOG(message) ::Helicon::Logger::HLog(::Helicon::LogLevel::Debug, message, __FILE__, __LINE__)
+  #define HE_LOG_INFO(message)  ::Helicon::Logger::HLog(::Helicon::LogLevel::Info, message, __FILE__, __LINE__)
+  #define HE_LOG_WARNING(message)  ::Helicon::Logger::HLog(::Helicon::LogLevel::Warning, message, __FILE__, __LINE__)
+  #define HE_LOG_ERROR(message) ::Helicon::Logger::HLog(::Helicon::LogLevel::Error, message, __FILE__, __LINE__)
+  #define HE_LOG_DEBUG(message) ::Helicon::Logger::HLog(::Helicon::LogLevel::Debug, message, __FILE__, __LINE__)
 
 #else
 
-#define HEL_INFO(...)
-#define HEL_WARN(...)
-#define HEL_ERROR(...)
-#define HEL_DEBUG(...) 
+  #define HE_LOG(...)
+  #define HE_LOG_INFO(...)
+  #define HE_LOG_WARNING(...)
+  #define HE_LOG_ERROR(...)
+  #define HE_LOG_DEBUG(...) 
 
 #endif
