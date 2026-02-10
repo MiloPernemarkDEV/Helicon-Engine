@@ -16,6 +16,9 @@
     <ClCompile Include="core\Logger.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\Shader.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -39,6 +42,9 @@
     </ClInclude>
     <ClInclude Include="core\Logger.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\Shader.h">
+      <Filter>renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

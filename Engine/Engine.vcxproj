@@ -164,6 +164,7 @@
     <ClCompile Include="core\Logger.cpp" />
     <ClCompile Include="renderer\glad.c" />
     <ClCompile Include="renderer\GLContext.cpp" />
+    <ClCompile Include="renderer\Shader.cpp" />
     <ClCompile Include="renderer\window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +175,7 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="math\Vec3.h" />
     <ClInclude Include="renderer\GLContext.h" />
+    <ClInclude Include="renderer\Shader.h" />
     <ClInclude Include="renderer\window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
