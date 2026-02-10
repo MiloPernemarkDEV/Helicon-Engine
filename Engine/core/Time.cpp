@@ -1,6 +1,6 @@
-	#include "coreTime.h"
+	#include "Time.h"
 
-	void coreTime::Init()
+	void Helicon::Time::Init()
 	{
 		LARGE_INTEGER freq;
 
@@ -16,7 +16,7 @@
 		HEL_DEBUG("Initialized coreTime.");
 	}
 
-	void coreTime::Update()
+	void Helicon::Time::Update()
 	{
 		LARGE_INTEGER now;
 		QueryPerformanceCounter(&now);
@@ -28,7 +28,7 @@
 		m_FrameCount++;
 	}
 
-	void coreTime::Reset() {
+	void Helicon::Time::Reset() {
 
 		QueryPerformanceCounter(&m_LastCounter);
 
@@ -37,14 +37,14 @@
 		m_FrameCount = 0; 
 	}
 
-	double coreTime::GetAverageFPS() {
+	double Helicon::Time::GetAverageFPS() {
 		if (m_TotalTime > 0.0) {
 			return static_cast<double>(m_FrameCount) / m_TotalTime;
 		}
 		return 0.0;
 	}
 
-	void coreTime::Shutdown() 
+	void Helicon::Time::Shutdown()
 	{
 		Reset();
 		HEL_DEBUG("Shutdown coreTime.");

@@ -31,6 +31,7 @@ namespace Helicon
 
     void Logger::HLog(LogLevel level, const char* message, const char* file, int line) 
     {
+
         const char* colorReset = "\x1B[0m";
         const char* colorRed   = "\x1B[31m";
         const char* colorGreen = "\x1B[32m";

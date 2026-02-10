@@ -1,3 +1,10 @@
+///////////////////
+// MathDefines.h //
+///////////////////
+
+// 2026-02-10 - Milo
+// Filename changed from mathDefines.h -- to MathDefines.h
+
 #pragma once
 
 #if defined(_MSC_VER)

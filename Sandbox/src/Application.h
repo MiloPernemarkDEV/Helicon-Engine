@@ -1,7 +1,7 @@
 #pragma once
 
-#include "window.h"
-#include "core/coreTime.h"
+#include "Window.h"
+#include "core/Time.h"
 #include "core/Logger.h"
 #include <iostream>
 
@@ -33,8 +33,8 @@ public:
 
 private:
 	// add the systems as member variables 
-	window m_Window{};
-	coreTime m_CoreTime{};
+	Helicon::Window m_Window{};
+	Helicon::Time m_CoreTime{};
 	
 };
 

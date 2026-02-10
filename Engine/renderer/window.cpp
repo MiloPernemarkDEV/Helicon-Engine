@@ -1,20 +1,23 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-#include "window.h"
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+
+#include "Window.h"
 
 
-window::window()
+Helicon::Window::Window()
 : m_Window(nullptr), WINDOW_WIDTH(800), WINDOW_HEIGHT(800)
 {
 }
 
-window::~window()
+Helicon::Window::~Window()
 {
 Terminate();
 }
 
-bool window::Init()
+bool Helicon::Window::Init()
 {
 glfwInit();
 SetContext();
@@ -32,7 +35,7 @@ HEL_DEBUG("Window Init called");
 return true;
 }
 
-void window::SetContext()
+void Helicon::Window::SetContext()
 {
 glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -40,14 +43,14 @@ glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 }
 
-bool window::Create()
+bool Helicon::Window::Create()
 {
 m_Window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Sandbox Project", NULL, NULL);
     
 return (m_Window != nullptr);
 }
 
-void window::Terminate()
+void Helicon::Window::Terminate()
 {
 if (m_Window) {
     glfwDestroyWindow(m_Window);
@@ -55,23 +58,23 @@ if (m_Window) {
 }
 }
 
-bool window::ShouldCloseWindow()
+bool Helicon::Window::ShouldCloseWindow()
 {
 return m_Window && glfwWindowShouldClose(m_Window);
 }
 
-void window::ProcessEvents()
+void Helicon::Window::ProcessEvents()
 {
 glfwPollEvents();
 }
 
-void window::SwapBuffers()
+void Helicon::Window::SwapBuffers()
 {
 if (m_Window)
     glfwSwapBuffers(m_Window);
 }
 
-void window::Shutdown()
+void Helicon::Window::Shutdown()
 {
 if (m_Window)
     glfwDestroyWindow(m_Window);
@@ -80,7 +83,7 @@ glfwTerminate();
 HEL_DEBUG("Shutdown window.");
 }
 
-void window::SetWindowIcon(const char* path)
+void Helicon::Window::SetWindowIcon(const char* path)
 {
 GLFWimage image;
 int width, height, channels;
