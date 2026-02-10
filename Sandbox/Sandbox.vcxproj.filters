@@ -22,5 +22,8 @@
     <ClInclude Include="src\Application.h">
       <Filter>Public</Filter>
     </ClInclude>
+    <ClInclude Include="VectormathTesting.h">
+      <Filter>Public</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
