@@ -2,18 +2,16 @@
 
 Application::InitResult Application::Launch()
 {
-
 	Helicon::Logger::Init();
 
 	if (!m_Window.Init()) 
 	{
-		HEL_ERROR("Launch Failed.");
+		HEL_ERROR("Failed to initialize window.");
 		return InitResult::Error;
 	}
 
 	m_CoreTime.Init();
 
-	HEL_INFO("launch Complete.");
 	return InitResult::Success;
 }
 
@@ -33,8 +31,5 @@ void Application::End()
 
 	m_CoreTime.Shutdown();
 	m_Window.Shutdown();
-
-	HEL_INFO("Shutdown Complete.");
-
-	// Shutdown logger
+	// Shutdown logger last
 }
