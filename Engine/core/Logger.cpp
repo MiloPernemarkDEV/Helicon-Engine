@@ -1,12 +1,14 @@
 #include "Logger.h"
 
+#include <filesystem>
+
 #include <plog/Log.h>
 #include <plog/Init.h>
 #include <plog/Formatters/MessageOnlyFormatter.h>
 #include <plog/Formatters/TxtFormatter.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
 #include <plog/Appenders/RollingFileAppender.h>
-#include <filesystem>
+
 
 namespace Helicon
 {   
