@@ -1,10 +1,13 @@
 #pragma once
 
-class ICoreSystem
+namespace Helicon 
 {
-public:
-	virtual ~ICoreSystem() = default;
+	class ICoreSystem
+	{
+	public:
+		virtual ~ICoreSystem() = default;
 
-	virtual bool Init() = 0;
-	virtual void Shutdown() = 0;
-};
+		virtual bool Init() = 0;
+		virtual void Shutdown() = 0;
+	};
+}
