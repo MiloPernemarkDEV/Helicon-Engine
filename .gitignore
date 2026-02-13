@@ -428,3 +428,4 @@ bin-int/Debug-x64/Engine
 bin-int/
 *.idb
 *.recipe
+Logs/

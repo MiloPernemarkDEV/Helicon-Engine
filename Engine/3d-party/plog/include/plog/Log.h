@@ -140,10 +140,10 @@
 #define LOG(severity)                   PLOG(severity)
 
 #define LOG_VERBOSE                     PLOG_VERBOSE
-#define LOG_DEBUG                       PLOG_DEBUG
-#define LOG_INFO                        PLOG_INFO
+#define HE_LOG_DEBUG                       PLOG_DEBUG
+#define HE_LOG_INFO                        PLOG_INFO
 #define LOG_WARNING                     PLOG_WARNING
-#define LOG_ERROR                       PLOG_ERROR
+#define HE_LOG_ERROR                       PLOG_ERROR
 #define LOG_FATAL                       PLOG_FATAL
 #define LOG_NONE                        PLOG_NONE
 

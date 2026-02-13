@@ -1,22 +1,25 @@
-	#include "coreTime.h"
+#include "Time.h"
 
-	void coreTime::Init()
+namespace Helicon 
+{
+	bool Time::Init()
 	{
 		LARGE_INTEGER freq;
 
 		if (!QueryPerformanceFrequency(&freq))
 		{
-			// Log Error 
+			return false;
 		}
-	
+
 		m_Frequency = static_cast<double>(freq.QuadPart);
 
 		Reset();
 
-		HEL_DEBUG("Initialized coreTime.");
+		HE_LOG_DEBUG("Time Init.");
+		return true;
 	}
 
-	void coreTime::Update()
+	void Time::Update()
 	{
 		LARGE_INTEGER now;
 		QueryPerformanceCounter(&now);
@@ -28,25 +31,27 @@
 		m_FrameCount++;
 	}
 
-	void coreTime::Reset() {
+	void Time::Reset() {
 
 		QueryPerformanceCounter(&m_LastCounter);
 
 		m_DeltaTime = 0.0;
 		m_TotalTime = 0.0;
-		m_FrameCount = 0; 
+		m_FrameCount = 0;
 	}
 
-	double coreTime::GetAverageFPS() {
+	double Time::GetAverageFPS() {
 		if (m_TotalTime > 0.0) {
 			return static_cast<double>(m_FrameCount) / m_TotalTime;
 		}
 		return 0.0;
 	}
 
-	void coreTime::Shutdown() 
+	void Time::Shutdown()
 	{
 		Reset();
-		HEL_DEBUG("Shutdown coreTime.");
+		HE_LOG("Time shutdown.");
 
 	}
+}
+	
