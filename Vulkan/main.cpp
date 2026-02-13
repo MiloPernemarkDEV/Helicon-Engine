@@ -116,11 +116,15 @@ private:
 	bool isDeviceSuitable(VkPhysicalDevice device) {
 		QueueFamilyIndices indices = findQueueFamilies(device);
 
-		return indices.graphicsFamily.has_value();
+		return indices.isComplete();
 	}
 
 	struct QueueFamilyIndices {
 		std::optional<uint32_t> graphicsFamily;
+
+		bool isComplete() {
+			return graphicsFamily.has_value();
+		}
 	};
 
 	// the VkQueueFamilyProperties contains some details about the queue family, type of operations
@@ -139,6 +143,10 @@ private:
 		for (const auto& queueFamily : queueFamilies) {
 			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
 				indices.graphicsFamily = i;
+
+				if (indices.isComplete()) {
+					break;
+				}
 			}
 
 			i++;
