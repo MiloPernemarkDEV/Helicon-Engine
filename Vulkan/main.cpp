@@ -37,7 +37,7 @@ private:
 	VkInstance instance;
 
 	// Handle to tell vulkan about our message callback function
-    VkDebugUtilsMessengerEXT debugMessenger;
+    VkDebugUtilsMessengerEXT debugMessenger = VK_NULL_HANDLE;
 
 
 	void initWindow() 
@@ -65,6 +65,7 @@ private:
           // Creating the instance invloves specifying details about the
           // application tot he driver 
 		  createInstance();
+          setupDebugMessenger();
 
 	}
 
@@ -243,7 +244,7 @@ private:
 	// dont pass by reference here because you want to destroy the objects
     // All Vulkan resources should be cleaned up before the Vulkan instance is destroyed
 	void cleanup(){ 
-		if (enableValidationLayers) {
+		if (enableValidationLayers && debugMessenger != VK_NULL_HANDLE) {
             DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
         }
 
