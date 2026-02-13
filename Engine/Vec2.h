@@ -138,9 +138,7 @@ struct Vec2
 	}
 	FORCE_INLINE Vec2 operator/(const float& s) const
 	{
-		if (std::abs(s) <= FLT_EPSILON) {
-			return Vec2::zero();
-		}
+		if (std::abs(s) <= FLT_EPSILON) return Vec2::zero();
 		float inv = 1.0f / s;
 		return Vec2(x * inv, y * inv);
 	}
@@ -154,7 +152,7 @@ struct Vec2
 		return std::abs(b - a) <= precision;
 	}
 };
-FORCE_INLINE Vec2 operator*(float s, const Vec2& v)
+FORCE_INLINE Vec2 operator*(const float& s, const Vec2& v)
 {
 	return v * s;
 }
