@@ -1,11 +1,19 @@
+// LLVM Formatting is on
+
+#define VK_USE_PLATFORM_WIN32_KHR
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
 
 #include <iostream>
 #include <stdexcept>
 #include <cstdlib>
 #include <vector>
 #include <cstring>
+#include <optional>
+#include <iostream>
+#include <set>
 
 // A constexpr variable must be initialized with value known at compile time
 // Prevents runtime overhead and is safe because it throws an error if it is not initialized
@@ -39,6 +47,23 @@ private:
 	// Handle to tell vulkan about our message callback function
     VkDebugUtilsMessengerEXT debugMessenger = VK_NULL_HANDLE;
 
+	VkSurfaceKHR surface;
+
+	// This handle stores the graphics card we will select 
+	// This handle will be implicitly destroyed when the VkInstance is destroyed 
+	// Therfore you dont need to explicitly destroy in the cleanup function
+	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+
+	// Store the logical device handle 
+	VkDevice device;
+
+	// Store a handle to the graphics queue
+	// Device queues are implicitly cleaned up when the device is destroyed
+	// so we dont need tp do anything in the cleanup function
+	VkQueue graphicsQueue;
+
+	VkQueue presentQueue;
+
 
 	void initWindow() 
 	{
@@ -57,16 +82,161 @@ private:
 		  window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
 	}
 
-	
+	// The first thing you need to do to initialize vulkan is creating an
+	// instance, the instance is the connection between the application
+	// and the Vulkan library
+	// Creating the instance invloves specifying details about the
+	// application tot he driver 
 	void initVulkan(){
-          // The first thing you need to do to initialize vulkan is creating an
-          // instance, the instance is the connection between the application
-          // and the Vulkan library
-          // Creating the instance invloves specifying details about the
-          // application tot he driver 
 		  createInstance();
           setupDebugMessenger();
+		  createSurface();
+		  pickPhysicalDevice(); 
+		  createLogicalDevice();
+	}
 
+	void createSurface() {
+		if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS){
+			throw std::runtime_error("failed to create window surface");
+		}
+	}
+
+	// The currently available drivers will only allow us to to create a small number of queues for each queue family.
+	// We dont really need more than one because you can create the command buffers on multiple threads 
+	// And then submit them al lat once on the main thread with a low-overhead call. 
+	// Vulkan lets you assign priorities to queues to influence the scheduling of command buffer execution using floating point numbers 0.0-1.0
+	// This is required even if there is a single queue 
+	void createLogicalDevice() {
+		QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+
+		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+		std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+
+		float queuePriority = 1.0f;
+		for (uint32_t queueFamily : uniqueQueueFamilies) {
+			VkDeviceQueueCreateInfo queueCreateInfo{};
+			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+			queueCreateInfo.queueFamilyIndex = queueFamily;
+			queueCreateInfo.queueCount = 1;
+			queueCreateInfo.pQueuePriorities = &queuePriority;
+			queueCreateInfos.push_back(queueCreateInfo);
+		}
+
+		// Next we need to specify the set of device features we will be using 
+		VkPhysicalDeviceFeatures deviceFeatures{};
+
+		VkDeviceCreateInfo createInfo{};
+
+		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+		createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
+		createInfo.pQueueCreateInfos = queueCreateInfos.data();
+
+		createInfo.pEnabledFeatures = &deviceFeatures;
+
+		createInfo.enabledExtensionCount = 0;
+		
+		if (enableValidationLayers) {
+			createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+			createInfo.ppEnabledLayerNames = validationLayers.data();
+		}
+		else {
+			createInfo.enabledLayerCount = 0;
+		}
+
+		if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS)
+		{
+			throw std::runtime_error("failed to create logical device");
+		}
+
+		// With the logical device and queue handles wew can actually start using the graphics card to to things
+		vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
+		vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
+	}
+	
+	
+	void pickPhysicalDevice() {
+
+		// Listing devices is similar to listing extensions, start by querying just the number 
+		// vkEnumeratePhysicalDevices adds the number of devices with vulkan support at the adress of the second parameter 
+		// in this case our deviceCount variable
+		uint32_t deviceCount = 0;
+          vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+
+		  if (deviceCount == 0) {
+            throw std::runtime_error("failed to find GPUs with Vulkan support!");
+          }
+
+		  // If we find devices with support of vulkan we can allocate an array to hold all of the VkPhysicalDevice handles
+		  std::vector<VkPhysicalDevice> devices(deviceCount);
+          vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+		  
+		  // then evaluate each of the devices and check if they are suitable for the operations we want to perform 
+		  // because not all graphics cards are created equal 
+		  for (const auto &device : devices) {
+            if (isDeviceSuitable(device)) {
+              physicalDevice = device;
+              break;
+            }
+          }
+
+		  if (physicalDevice == VK_NULL_HANDLE) {
+            throw std::runtime_error("failed to find suitable GPU!");
+          }
+	}
+
+	// To evaluate the suitability of a device we can start by querying for some details. 
+	// Basic properties such as name, type, supported vulkan version can be queried using 
+	// vkGetPhysicalDeviceProperties
+	// the support of optional features such as texture compression, 64 bit floats and multi viewport renderering(useful for VR)
+	// can be queried using vkGetPhysicalDeviceFeatures
+	bool isDeviceSuitable(VkPhysicalDevice device) {
+		QueueFamilyIndices indices = findQueueFamilies(device);
+
+		return indices.isComplete();
+	}
+
+	struct QueueFamilyIndices {
+		std::optional<uint32_t> graphicsFamily;
+		std::optional<uint32_t> presentFamily;
+
+		bool isComplete() {
+			return graphicsFamily.has_value() && presentFamily.has_value();
+		}
+	};
+
+	// the VkQueueFamilyProperties contains some details about the queue family, type of operations
+	// that are supported, and number of queues that can be created based on that family
+	// we need to find atleast one queue family that supports VK_QUEUE_GRAPHICS_BIT
+	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
+		QueueFamilyIndices indices;
+
+		uint32_t queueFamilyCount = 0;
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+		int i = 0;
+		for (const auto& queueFamily : queueFamilies) 
+		{
+			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+				indices.graphicsFamily = i;
+			}
+
+			VkBool32 presentSupport = false;
+			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+
+			if (presentSupport) {
+				indices.presentFamily = i;
+			}
+
+			if (indices.isComplete()) {
+				break;
+			}
+
+			i++;
+		}
+		return indices;
 	}
 
 	void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
@@ -125,7 +295,6 @@ private:
     // variable that stores the handle to the new object
     // Nearly all Vulkan functions return a value of type VkResult
     // that is either VK_SUCESS or an error code.
-
 	void createInstance() {
           if (enableValidationLayers && !checkValidationLayerSupport()) {
             throw std::runtime_error("Validation layers requested, but not available");
@@ -241,13 +410,18 @@ private:
 		return VK_FALSE;
 	}
 
+
+
 	// dont pass by reference here because you want to destroy the objects
     // All Vulkan resources should be cleaned up before the Vulkan instance is destroyed
 	void cleanup(){ 
+		vkDestroyDevice(device, nullptr);
+
 		if (enableValidationLayers && debugMessenger != VK_NULL_HANDLE) {
             DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
         }
 
+		vkDestroySurfaceKHR(instance, surface, nullptr);
 		vkDestroyInstance(instance, nullptr);
 
 		glfwDestroyWindow(window);
@@ -338,3 +512,42 @@ int main() {
 
 // 5. void* pUserData
 // contains a pointer that was specifiecd during the setup of the callback and allows you to pass your own data to it 
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+//////////////////////
+//					//
+// Queue famillies  //
+//				    //
+//////////////////////
+
+// Almost every operation in Vulkan, from drawing to uploading textures, requires commands to be submitted to a queue. 
+// There are different types of queues that originate from different queue families and each family only allows 
+// A subset of commands. There could be a queue family that only allows processing compute commands or one that
+// Only allows memory transfer related commands
+// we need to check which queue families are supported by the device and which of these supports the commands that we want to use 
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/////////////////////////////////
+//				               //
+// Logical Devices and queues  //
+//					           //
+/////////////////////////////////
+
+// After selecting a physical device we need to set up at logical device to interface with it. 
+// The creating process of the logical device is similar to the instance creation process it describes the features we want to use 
+// We also need to specify which queues to create now that we have queried which queue families are available. 
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+////////////////////
+//				  //
+// Window surface //
+//				  //
+////////////////////
+
+// Since Vulkan is a platform angostic API, it can not interface directly with the windows system on its own. 
+// To establish  connection between Vulkan and the window system to present results to the screen, we need to use the 
+// WSI (Window System Integration) extensions 
+// Window surfaces are optional in Vulkan, you create off-screen rendering. 
