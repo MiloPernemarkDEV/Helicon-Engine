@@ -4,11 +4,28 @@
 #include <iostream>
 #include "Vec3.h"
 #include "Vec3OpsTest.h"
+#include "StateMachine.h"
+
+
+
 
 int main()
 {
     std::cout << "Hello World!\n";
-    Vec3OpsTest::RunVec3Tests();
+    //Vec3OpsTest::RunVec3Tests();
+
+    StateMachine bradsDaySM = StateMachine(3);
+    State sleeping;
+    State showering;
+    State working;
+    State playingVideogames;
+
+    Transition toSleeping;
+    Transition toShowering;
+    Transition toWorking;
+    Transition toPlayingVideogames;
+
+
 
 }
 

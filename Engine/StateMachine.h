@@ -47,6 +47,7 @@ public:
 	//std::vector<Transition> transitions;
 	State* currentStatePtr = nullptr; // memory address of the current state
 	std::deque<std::string> stateHistory; // fixed-size historty of state names
+	State* initialState = nullptr;
 
 	StateMachine(size_t historySize = 10) : maxHistory(historySize) {}
 
