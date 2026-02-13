@@ -1,5 +1,3 @@
-
-
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
@@ -9,8 +7,10 @@
 #include <vector>
 #include <cstring>
 
-const uint32_t WIDTH = 800;
-const uint32_t HEIGHT = 600;
+// A constexpr variable must be initialized with value known at compile time
+// Prevents runtime overhead and is safe because it throws an error if it is not initialized
+constexpr uint32_t WIDTH = 800;
+constexpr uint32_t HEIGHT = 600;
 
 const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"
@@ -35,6 +35,10 @@ public:
 private:
 	GLFWwindow* window;
 	VkInstance instance;
+
+	// Handle to tell vulkan about our message callback function
+    VkDebugUtilsMessengerEXT debugMessenger;
+
 
 	void initWindow() 
 	{
@@ -64,6 +68,63 @@ private:
 
 	}
 
+	void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
+          createInfo = {};
+		createInfo.sType =
+              VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+          createInfo.messageSeverity =
+              VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
+              VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+              VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+          createInfo.messageType =
+              VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+              VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+              VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+          createInfo.pfnUserCallback = debugCallback;
+          createInfo.pUserData = nullptr;
+	}
+
+	void setupDebugMessenger() { 
+		   if (!enableValidationLayers) return;
+
+           VkDebugUtilsMessengerCreateInfoEXT createInfo;
+           populateDebugMessengerCreateInfo(createInfo);
+		   
+		   if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
+                     throw std::runtime_error("failed to set up debug messenger!");
+		   }
+
+	}
+
+	VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+		const VkAllocationCallbacks* pAllocator,
+		VkDebugUtilsMessengerEXT* pDebugMessenger) {
+          auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
+              instance, "vkCreateDebugUtilsMessengerEXT");
+          if (func != nullptr) {
+            return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+          } else {
+			  return VK_ERROR_EXTENSION_NOT_PRESENT;
+          }
+	}
+
+	static void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger,
+										const VkAllocationCallbacks *pAllocator) {
+
+          auto func =(PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+          
+		  if (func != nullptr) {
+            func(instance, debugMessenger, pAllocator);
+          }
+    }
+
+	// The general pattern to object creation function paramters
+    // are is, a pointer to a struct with creation info, a pointer
+    // to custom allocator callbacks (nullptr rn), pointer to the
+    // variable that stores the handle to the new object
+    // Nearly all Vulkan functions return a value of type VkResult
+    // that is either VK_SUCESS or an error code.
+
 	void createInstance() {
           if (enableValidationLayers && !checkValidationLayerSupport()) {
             throw std::runtime_error("Validation layers requested, but not available");
@@ -90,30 +151,29 @@ private:
 		  createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 		  createInfo.pApplicationInfo = &appInfo;
 
+
 		  uint32_t glfwExtensionCount = 0;
-		  const char** glfwExtensions;
+		 
+		  auto glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
-		  glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+		  auto extensions = getRequiredExtensions();
+		  createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+		  createInfo.ppEnabledExtensionNames = extensions.data();
 
-		  createInfo.enabledExtensionCount = glfwExtensionCount;
-		  createInfo.ppEnabledExtensionNames = glfwExtensions;
-
+		
+		  VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo {};
 		  if (enableValidationLayers) {
-              createInfo.enabledLayerCount =
-              static_cast<uint32_t>(validationLayers.size());
-              createInfo.ppEnabledLayerNames = validationLayers.data();
-          } else {
-              createInfo.enabledLayerCount = 0;
-          }
+				createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+				createInfo.ppEnabledLayerNames = validationLayers.data();
 
-		  // The general pattern to object creation function paramters
-          // are is, a pointer to a struct with creation info, a pointer
-          // to custom allocator callbacks (nullptr rn), pointer to the
-          // variable that stores the handle to the new object
-				// Nearly all Vulkan functions return a value of type VkResult
-				// that is either VK_SUCESS or an error code. 
-				// 
-		  // VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
+				populateDebugMessengerCreateInfo(debugCreateInfo);
+				createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
+		  } 
+		  else {
+				createInfo.enabledLayerCount = 0;
+
+				createInfo.pNext = nullptr;
+		  }
 
 		  if (vkCreateInstance(&createInfo, nullptr, &instance) !=VK_SUCCESS) {
                     throw std::runtime_error("failed to create instance!");
@@ -147,24 +207,52 @@ private:
           return true;
 	}
 
+	// Setting up Vulkan message callback to display error messages during errors 
+	// the macro prevents typos as it is equal to the literal string "VK_EXT_debug_utils" 
+	std::vector<const char*> getRequiredExtensions() {
+		uint32_t glfwExtensionCount = 0;
+		const char** glfwExtensions;
+        glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+		std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+
+		if (enableValidationLayers) {
+                  extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+		}
+
+		return extensions;
+	}
+
 	void mainLoop(){ 
 		  while (!glfwWindowShouldClose(window)) {
               glfwPollEvents();
           }
 	}
 
-	void cleanup(){ 
+	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+        VkDebugUtilsMessageTypeFlagsEXT messageType, 
+	    const VkDebugUtilsMessengerCallbackDataEXT* pCallBackData, 
+	    void* pUserData) {
 		
-		// dont pass by reference here because you want to destroy the instance not reference it
-		// All other Vulkan resources should be cleaned up before the Vulkan instance is destroyed
+		std::cerr << "Validation layer: " << pCallBackData->pMessage << std::endl;
+		
+		return VK_FALSE;
+	}
+
+	// dont pass by reference here because you want to destroy the objects
+    // All Vulkan resources should be cleaned up before the Vulkan instance is destroyed
+	void cleanup(){ 
+		if (enableValidationLayers) {
+            DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
+        }
+
 		vkDestroyInstance(instance, nullptr);
 
 		glfwDestroyWindow(window);
 
         glfwTerminate();
-	 
 	}
-
 };
 
 int main() {
@@ -213,3 +301,39 @@ int main() {
 // The validation layers will print debug messages to the standard outpout by default but we can also handle that by ourselves
 // By providing a explicit callback in our program, this will also let you decide which kind of messages you would like to see,
 // Because not all are necessarily (fatal) erros. 
+
+// Even the callbacks need a handle in vulkan to tell Vulkan about the function 
+// it needs to be explicitly created and destroyed
+// 
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+// How to set up a message callback ----
+
+// 1. declare this function: static VKAPI_ATTR VkBool32 VKAPI_CALL functionName(parameters below)
+// VKAPI_ATTR & VKAPI_CALL ensures the function has the right signature for Vulkan to call it 
+
+
+// 2. first Parameters: vkDebugUtilsMessageSeverityFlagBitsEXT (Message Severity): 
+
+// The first parameter specify the severity of the message, it is one of
+// following flags, 
+// VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
+// VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
+// VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
+// VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
+// The values of these enumerations are set up in a way that you can do comparison checks 
+// For example using if statements to check if something is worth to show
+
+// 3. Second Parameter: VkDebugUtilsMessageTypeFlagsEXT messageType,
+// Can have the following values
+// VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT, (Some event has happened that is unrelated to the specification or performance)
+// VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT (Something has happened that violates the specification or indicates a possible mistake)
+// VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT (Potential non-optimal use of Vulkan)
+
+// 4. VkDebugUtilsMessengerCallbackDataEXT* pCallBackData 
+// refers to a struct containing details of the message itself, 
+// most important members being pMessage, pObjetcs, pObjectCount
+
+// 5. void* pUserData
+// contains a pointer that was specifiecd during the setup of the callback and allows you to pass your own data to it 
