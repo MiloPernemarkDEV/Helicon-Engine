@@ -1,3 +1,5 @@
+// LLVM Formatting is on
+
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
@@ -6,6 +8,8 @@
 #include <cstdlib>
 #include <vector>
 #include <cstring>
+#include <optional>
+#include <iostream>
 
 // A constexpr variable must be initialized with value known at compile time
 // Prevents runtime overhead and is safe because it throws an error if it is not initialized
@@ -39,6 +43,11 @@ private:
 	// Handle to tell vulkan about our message callback function
     VkDebugUtilsMessengerEXT debugMessenger = VK_NULL_HANDLE;
 
+	// This handle stores the graphics card we will select 
+	// This handle will be implicitly destroyed when the VkInstance is destroyed 
+	// Therfore you dont need to explicitly destroy in the cleanup function
+	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+
 
 	void initWindow() 
 	{
@@ -67,6 +76,75 @@ private:
 		  createInstance();
           setupDebugMessenger();
 
+	}
+
+	void pickPhysicalDevice() {
+
+		// Listing devices is similar to listing extensions, start by querying just the number 
+		// vkEnumeratePhysicalDevices adds the number of devices with vulkan support at the adress of the second parameter 
+		// in this case our deviceCount variable
+		uint32_t deviceCount = 0;
+          vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+
+		  if (deviceCount == 0) {
+            throw std::runtime_error("failed to find GPUs with Vulkan support!");
+          }
+
+		  // If we find devices with support of vulkan we can allocate an array to hold all of the VkPhysicalDevice handles
+		  std::vector<VkPhysicalDevice> devices(deviceCount);
+          vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+		  
+		  // then evaluate each of the devices and check if they are suitable for the operations we want to perform 
+		  // because not all graphics cards are created equal 
+		  for (const auto &device : devices) {
+            if (isDeviceSuitable(device)) {
+              physicalDevice = device;
+              break;
+            }
+          }
+
+		  if (physicalDevice == VK_NULL_HANDLE) {
+            throw std::runtime_error("failed to find suitable GPU!");
+          }
+	}
+
+	// To evaluate the suitability of a device we can start by querying for some details. 
+	// Basic properties such as name, type, supported vulkan version can be queried using 
+	// vkGetPhysicalDeviceProperties
+	// the support of optional features such as texture compression, 64 bit floats and multi viewport renderering(useful for VR)
+	// can be queried using vkGetPhysicalDeviceFeatures
+	bool isDeviceSuitable(VkPhysicalDevice device) {
+		QueueFamilyIndices indices = findQueueFamilies(device);
+
+		return indices.graphicsFamily.has_value();
+	}
+
+	struct QueueFamilyIndices {
+		std::optional<uint32_t> graphicsFamily;
+	};
+
+	// the VkQueueFamilyProperties contains some details about the queue family, type of operations
+	// that are supported, and number of queues that can be created based on that family
+	// we need to find atleast one queue family that supports VK_QUEUE_GRAPHICS_BIT
+	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
+		QueueFamilyIndices indices;
+
+		uint32_t queueFamilyCount = 0;
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+		int i = 0;
+		for (const auto& queueFamily : queueFamilies) {
+			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+				indices.graphicsFamily = i;
+			}
+
+			i++;
+		}
+
+		return indices;
 	}
 
 	void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
@@ -241,6 +319,8 @@ private:
 		return VK_FALSE;
 	}
 
+
+
 	// dont pass by reference here because you want to destroy the objects
     // All Vulkan resources should be cleaned up before the Vulkan instance is destroyed
 	void cleanup(){ 
@@ -338,3 +418,17 @@ int main() {
 
 // 5. void* pUserData
 // contains a pointer that was specifiecd during the setup of the callback and allows you to pass your own data to it 
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+//////////////////////
+//					//
+// Queue famillies  //
+//				    //
+//////////////////////
+
+// Almost every operation in Vulkan, from drawing to uploading textures, requires commands to be submitted to a queue. 
+// There are different types of queues that originate from different queue families and each family only allows 
+// A subset of commands. There could be a queue family that only allows processing compute commands or one that
+// Only allows memory transfer related commands
+// we need to check which queue families are supported by the device and which of these supports the commands that we want to use 
