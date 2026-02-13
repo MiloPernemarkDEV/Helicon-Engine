@@ -29,6 +29,9 @@ public:
 	std::string transitionName;
 	std::string eventString;   // The event that triggers this transition
 	std::string toStateName;
+	Transition(
+		std::string name, std::string event, std::string to
+	) : transitionName(std::move(name)), eventString(std::move(event)), toStateName(std::move(to)) { }
 };
 
 class State
@@ -36,6 +39,9 @@ class State
 public:
 	std::string stateName;
 	std::vector<Transition> transitions;
+
+	State(std::string _stateName) : stateName(_stateName) {};
+
 	void OnEnter();
 	void OnExit();
 };
@@ -44,20 +50,28 @@ class StateMachine
 {
 public:
 	std::vector<State> states;
-	//std::vector<Transition> transitions;
+	State* initialStatePtr = nullptr;
 	State* currentStatePtr = nullptr; // memory address of the current state
 	std::deque<std::string> stateHistory; // fixed-size historty of state names
+	
 
 	StateMachine(size_t historySize = 10) : maxHistory(historySize) {}
-
-	void OnEventStringReceived(const std::string& eventStr);
+	void SendEvent(const std::string& eventStr);
 	std::string GetPreviousStateName();
+	void Initialize();
 private:
 	size_t maxHistory;
 	void AddToHistory(const std::string& stateName);
 
 };
-void StateMachine::OnEventStringReceived(const std::string& eventStr)
+void StateMachine::Initialize()
+{
+	currentStatePtr = initialStatePtr;
+	if (currentStatePtr != nullptr) {
+		currentStatePtr->OnEnter();
+	}
+}
+void StateMachine::SendEvent(const std::string& eventStr)
 {
 	if (currentStatePtr == nullptr) {
 		std::cerr << "No current state\n";
@@ -69,18 +83,11 @@ void StateMachine::OnEventStringReceived(const std::string& eventStr)
 			// look up the new state by name
 			for (auto& state : states) {
 				if (state.stateName == transition.toStateName) {
-
-					//out with the old
 					AddToHistory(currentStatePtr->stateName);
 					currentStatePtr->OnExit();  
-					// moved ^^this to inside the if block
-					// it seemed more appropriate to exercise
-					// the enter/exit machinery once all the
-					// conditions are satisfied.
-
-					// in with the new
 					currentStatePtr = &state;
 					currentStatePtr->OnEnter();
+					std::cout << "Current state:" << currentStatePtr->stateName << "\n";
 					return;
 				}
 			}
@@ -88,11 +95,6 @@ void StateMachine::OnEventStringReceived(const std::string& eventStr)
 			return;
 		}
 	}
-	// transition not allowed from this state.
-	// (I'm not sure if this will always be an error condition.
-	// for example if the current state is "airborne", and a 
-	// "walk" input is received, that's not an error, it's just a 
-	// disallowed transition.)
 	std::cerr << "No transition from '" << currentStatePtr->stateName << "' on event '" << eventStr << "'.\n";
 }
 void StateMachine::AddToHistory(const std::string& stateName)
@@ -111,12 +113,12 @@ std::string StateMachine::GetPreviousStateName()
 void State::OnEnter()
 {
 	StateEvent enterEvent { EnumStateEvents::STATE_ENTERED, stateName };
+	std::cout << "Entering state: " << stateName << "\n";
 	// pop off an event with the ^^StateEvent payload
-	// how do C++ events work?
 }
 void State::OnExit()
 {
 	StateEvent exitEvent { EnumStateEvents::STATE_EXITED, stateName };
+	std::cout << "Exiting state: " << stateName << "\n";
 	// pop off an event with the ^^StateEvent payload
 }
-
