@@ -40,6 +40,9 @@
     <ClInclude Include="core\Logger.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="Vec2.h">
+      <Filter>math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
