@@ -102,11 +102,12 @@ struct Vec3 {
 
 	FORCE_INLINE Vec3 normalize() const
 	{
-		if (abs(magnitude()) <= FLT_EPSILON) return Vec3::zero();
+		float m = magnitude();
+		if (m <= FLT_EPSILON) return Vec3::zero();
 		return Vec3(
-			x / magnitude(),
-			y / magnitude(),
-			z / magnitude()
+			x / m,
+			y / m,
+			z / m
 		);
 	}
 
@@ -149,7 +150,7 @@ struct Vec3 {
 	FORCE_INLINE Vec3 reflection(const Vec3& other) const
 	{
 		// relfection of zero vector is zero vector
-		if (abs(magnitude()) < FLT_EPSILON) return Vec3::zero();
+		if (abs(magnitude()) < FLT_EPSILON || abs(other.magnitude()) < FLT_EPSILON) return Vec3::zero();
 		
 		//Formula: reflected = V - 2 * (V · N) * N
 		// other is the surface normal -- other must be normalized;

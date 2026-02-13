@@ -177,6 +177,8 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="math\Vec3.h" />
     <ClInclude Include="renderer\GLContext.h" />
+    <ClInclude Include="renderer\window.h" />
+    <ClInclude Include="Vec2.h" />
     <ClInclude Include="renderer\Shader.h" />
     <ClInclude Include="renderer\Window.h" />
   </ItemGroup>
