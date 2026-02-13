@@ -24,6 +24,10 @@ const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"
 };
 
+const std::vector<const char*> deviceExtensions = {
+	VK_KHR_SWAPCHAIN_EXTENSION_NAME
+};
+
 // NDEBUG is part of the C++ standard means "Not debug"
 #ifdef NDEBUG
 	const bool enableValidationLayers = false;
@@ -133,7 +137,8 @@ private:
 
 		createInfo.pEnabledFeatures = &deviceFeatures;
 
-		createInfo.enabledExtensionCount = 0;
+		createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
+		createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 		
 		if (enableValidationLayers) {
 			createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
@@ -151,6 +156,60 @@ private:
 		// With the logical device and queue handles wew can actually start using the graphics card to to things
 		vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
 		vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
+	}
+
+	VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) {
+		for (const auto& avaiablePresentMode : availablePresentModes) {
+			// if we find this mode we choose it for this app
+			if (avaiablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
+				return avaiablePresentMode;
+			}
+		}
+		// Guarenteed to exist 
+		return VK_PRESENT_MODE_FIFO_KHR;
+	}
+
+	struct SwapChainSupportDetails {
+		VkSurfaceCapabilitiesKHR capabilities;
+		std::vector<VkSurfaceFormatKHR> formats;
+		std::vector<VkPresentModeKHR> presentModes;
+	};
+
+	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device) {
+		SwapChainSupportDetails details;
+
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
+
+		uint32_t formatCount;
+		vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, nullptr);
+
+		if (formatCount != 0) {
+			details.formats.resize(formatCount);
+			vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, details.formats.data());
+		}
+
+		uint32_t presentModeCount;
+		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, nullptr);
+
+		if (presentModeCount != 0) {
+			details.presentModes.resize(presentModeCount);
+			vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, 
+				details.presentModes.data());
+		}
+
+		return details;
+	}
+
+	// Each VkSurfaceFormatKHR entry cotnains a format and a colorSpace member. the format member specifcies the color channels and types
+	VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
+		for (const auto& availableFormat : availableFormats) {
+			if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB
+				&& availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+				return availableFormat;
+			}
+		}
+
+		return availableFormats[0];
 	}
 	
 	
@@ -192,7 +251,32 @@ private:
 	bool isDeviceSuitable(VkPhysicalDevice device) {
 		QueueFamilyIndices indices = findQueueFamilies(device);
 
-		return indices.isComplete();
+		bool extensionSupported = checkDeviceExtensionSupport(device);
+
+		bool swapChainAdequate = false; 
+		if (extensionSupported) {
+			SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
+			swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
+		}
+
+		return indices.isComplete() && extensionSupported && swapChainAdequate;
+	}
+
+	bool checkDeviceExtensionSupport(VkPhysicalDevice device) {
+		uint32_t extensionCount;
+		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
+
+		std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+		vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
+		
+		std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+
+		for (const auto& extension : availableExtensions) {
+			requiredExtensions.erase(extension.extensionName);
+		}
+
+		return requiredExtensions.empty();
+		
 	}
 
 	struct QueueFamilyIndices {
@@ -550,4 +634,57 @@ int main() {
 // Since Vulkan is a platform angostic API, it can not interface directly with the windows system on its own. 
 // To establish  connection between Vulkan and the window system to present results to the screen, we need to use the 
 // WSI (Window System Integration) extensions 
-// Window surfaces are optional in Vulkan, you create off-screen rendering. 
+// Window surfaces are optional in Vulkan, you create off-screen rendering.		
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+////////////////////
+//				  //
+//   Swap chain   //
+//				  //
+////////////////////
+
+// Since Vulkan is a platform angostic API, it can not interface directly with the windows system on its own. 
+// To establish  connection between Vulkan and the window system to present results to the screen, we need to use the 
+// WSI (Window System Integration) extensions 
+// Window surfaces are optional in Vulkan, you create off-screen rendering.		
+
+// Querying details of swapchain support
+// There are three basic properties we need to check 
+// Basic surface capabilities (min/max number of images in swap chain, min/max width and height of images)'
+// surface format (pixel format, color space) 
+// Available presentation modes s
+
+// if the swapChainAdequate conditions are met the support is defenetly sufficient for the swap chain 
+// but there are still many different modes of varying optimality. 
+// there are three types of settings to determine:
+// Surface format (color depth)
+// Presentation mode (conditions for "swapping" images to the screen)
+// Swap extent (resolution of images in swap chain)
+
+// The presentation mode 
+// it is arguably the most important setting for the swapchain because it represents the actual conditions for showing images on screen 
+// Vulkan has 4 possible modes for this 
+// 
+// VK_PRESENT_MODE_IMMEDIATE_KHR: 
+// (Images submitted by the app is transfered to the screen right away, which may result in tearing)
+// 
+// VK_PRESENT_MODE_FIFO_KHR: 
+// (The swap chain is a queue where the display takes an image from the front of the queue 
+// when the display is refreshed and the program inserts rendered images at the back of the queue. If the queue is full the the program has to wait
+// this is most similar to vertical sync as found in modern games, the moment the display is refreshed is known as "Vertical blank"
+// this mode is the only one guarenteed to be avialable)
+// This mode is preferd for mobile 
+// 
+// VK_PRESENT_MODE_FIFO_RELAXED_KHR:
+// (This mode only differs from the previous one if the app is late and the queue was empty at the last vertical blank. 
+// instead of waiting for the next vertical blank, the image is transferred right away when it finally arrives, may result in visible tearing)
+// 
+// VK_PRESENT_MODE_MAILBOX_KHR:
+// (This is another variation on the second mode. Instead of blocking the new ones this mode can be used to render frames as fast as possible
+// while still avoiding tearing, resulting in fewer latency issues than standard vertical sync(vsync). this is commonly known as tripple buffering, 
+// although the extistence of three buffers alone does not necessarily mean that the framrate is unlocked)
+// This one is nice if energy usage is not a concern 
+
+// Swap extent
+
