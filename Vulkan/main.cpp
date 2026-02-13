@@ -1,6 +1,7 @@
 // LLVM Formatting is on
 
 #define VK_USE_PLATFORM_WIN32_KHR
+#define NOMINMAX 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -12,8 +13,10 @@
 #include <vector>
 #include <cstring>
 #include <optional>
-#include <iostream>
 #include <set>
+#include <cstdint>
+#include <limits>
+#include <algorithm>
 
 // A constexpr variable must be initialized with value known at compile time
 // Prevents runtime overhead and is safe because it throws an error if it is not initialized
@@ -47,43 +50,38 @@ public:
 private:
 	GLFWwindow* window;
 	VkInstance instance;
-
 	// Handle to tell vulkan about our message callback function
     VkDebugUtilsMessengerEXT debugMessenger = VK_NULL_HANDLE;
-
 	VkSurfaceKHR surface;
-
 	// This handle stores the graphics card we will select 
 	// This handle will be implicitly destroyed when the VkInstance is destroyed 
 	// Therfore you dont need to explicitly destroy in the cleanup function
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-
 	// Store the logical device handle 
 	VkDevice device;
-
 	// Store a handle to the graphics queue
 	// Device queues are implicitly cleaned up when the device is destroyed
 	// so we dont need tp do anything in the cleanup function
 	VkQueue graphicsQueue;
-
 	VkQueue presentQueue;
-
+	VkSwapchainKHR swapChain;
+	std::vector<VkImage> swapChainImages;
 
 	void initWindow() 
 	{
 
-		  // Initializes the library
-		  glfwInit();
+		// Initializes the library
+		glfwInit();
 
-		  // Tell glfw to not create an OpenGL context
-		  glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); 
+		// Tell glfw to not create an OpenGL context
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
-		  // Disabling for now as it needs special care to resize window 
-		  glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		// Disabling for now as it needs special care to resize window 
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-		  // The first three parameters specify the width, height and title of the window 
-		  // The fourth allows you to optionally specify monitor to open window and the last parameter is only relevant to OpenGL
-		  window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
+		// The first three parameters specify the width, height and title of the window 
+		// The fourth allows you to optionally specify monitor to open window and the last parameter is only relevant to OpenGL
+		window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
 	}
 
 	// The first thing you need to do to initialize vulkan is creating an
@@ -91,16 +89,81 @@ private:
 	// and the Vulkan library
 	// Creating the instance invloves specifying details about the
 	// application tot he driver 
-	void initVulkan(){
-		  createInstance();
-          setupDebugMessenger();
-		  createSurface();
-		  pickPhysicalDevice(); 
-		  createLogicalDevice();
+	void initVulkan() {
+		createInstance();
+		setupDebugMessenger();
+		createSurface();
+		pickPhysicalDevice();
+		createLogicalDevice();
+		createSwapChain();
+	}
+
+	void createSwapChain() {
+		SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice);
+
+		VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
+		VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
+		VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities);
+		
+		// Aside from these properties we also need to decide how many images we would like to have in the swap chain
+		// Sticking to this minimum means we sometimes need to wait for the driver to complete internal operations before
+		// we can aquire a new image to render to. it is recommended to request atleast one more image hence (+ 1)
+		uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+
+		if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
+			imageCount = swapChainSupport.capabilities.maxImageCount;
+		}
+
+		// as tradition with Vulkan objects we start by filling the form of all the information about it 
+		// imageUsage bit field specify what operations we will use the images in the swap chain for
+		// we are going to render directly to the images, if you want to do postprocessing you should look at 
+		// VK_IMAGE_USAGE_TRANSFER_DST_BIT
+		// not doing that now though :)
+		VkSwapchainCreateInfoKHR createInfo{};
+		createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+		createInfo.surface = surface;
+		createInfo.minImageCount = imageCount;
+		createInfo.imageFormat = surfaceFormat.format;
+		createInfo.imageColorSpace = surfaceFormat.colorSpace;
+		createInfo.imageExtent = extent;
+		createInfo.imageArrayLayers = 1;
+		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+		QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+		uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+
+		if (indices.graphicsFamily != indices.presentFamily) {
+			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+			createInfo.queueFamilyIndexCount = 2;
+			createInfo.pQueueFamilyIndices = queueFamilyIndices;
+		}
+		else {
+			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+			createInfo.queueFamilyIndexCount = 0;
+			createInfo.pQueueFamilyIndices = nullptr;
+		}
+
+		createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
+		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+		createInfo.presentMode = presentMode;
+		createInfo.clipped = VK_TRUE;
+
+		// With vulkan it is possible that the swap chain becomes invalid or unoptimized while the app is running
+		// example because the window was resized. then the swap chain needs to be recreated from scratch 
+		// and a reference to the old one needs to be specficied in this field
+		createInfo.oldSwapchain = VK_NULL_HANDLE;
+
+		if (vkCreateSwapchainKHR(device, &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create swap chain");
+		}
+
+		vkGetSwapchainImagesKHR(device, swapChain, &imageCount, nullptr);
+		swapChainImages.resize(imageCount);
+		vkGetSwapchainImagesKHR(device, swapChain, &imageCount, swapChainImages.data());
 	}
 
 	void createSurface() {
-		if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS){
+		if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create window surface");
 		}
 	}
@@ -114,7 +177,7 @@ private:
 		QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-		std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+		std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
 
 		float queuePriority = 1.0f;
 		for (uint32_t queueFamily : uniqueQueueFamilies) {
@@ -139,7 +202,7 @@ private:
 
 		createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
 		createInfo.ppEnabledExtensionNames = deviceExtensions.data();
-		
+
 		if (enableValidationLayers) {
 			createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
 			createInfo.ppEnabledLayerNames = validationLayers.data();
@@ -167,6 +230,28 @@ private:
 		}
 		// Guarenteed to exist 
 		return VK_PRESENT_MODE_FIFO_KHR;
+	}
+
+	VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
+		if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
+			return capabilities.currentExtent;
+		}
+		else {
+			int width, height;
+			glfwGetFramebufferSize(window, &width, &height);
+
+			VkExtent2D actualExtent = {
+				static_cast<uint32_t>(width),
+				static_cast<uint32_t>(height)
+			};
+
+			actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, 
+				capabilities.maxImageExtent.width);
+			actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, 
+				capabilities.maxImageExtent.height);
+
+			return actualExtent;
+		}
 	}
 
 	struct SwapChainSupportDetails {
@@ -499,6 +584,9 @@ private:
 	// dont pass by reference here because you want to destroy the objects
     // All Vulkan resources should be cleaned up before the Vulkan instance is destroyed
 	void cleanup(){ 
+
+		vkDestroySwapchainKHR(device, swapChain, nullptr);
+
 		vkDestroyDevice(device, nullptr);
 
 		if (enableValidationLayers && debugMessenger != VK_NULL_HANDLE) {
@@ -687,4 +775,5 @@ int main() {
 // This one is nice if energy usage is not a concern 
 
 // Swap extent
+// the swap extent is the resolution of the swap chain images and it is almost always exactly equal to the resolution of the window we are drawing in pixels 
 
