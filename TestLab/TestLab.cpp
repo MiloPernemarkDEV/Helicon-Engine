@@ -47,6 +47,19 @@ int main()
     bradsDaySM.initialStatePtr = &bradsDaySM.states[0];
     bradsDaySM.Initialize();
 
+
+    bradsDaySM.AddListener([](const StateEvent& e) {
+        
+        switch (e.eventType) {
+        case EnumStateEvents::STATE_ENTERED:
+            std::cout << "Brad started " << e.stateName << ".\n";
+            break;
+        case EnumStateEvents::STATE_EXITED:
+            std::cout << "Brad finished " << e.stateName << ".\n";
+            break;
+        }
+        });
+
     bradsDaySM.SendEvent(toShowering.eventString);
     bradsDaySM.SendEvent(toWorking.eventString);
     bradsDaySM.SendEvent(toRunningErrands.eventString);
