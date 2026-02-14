@@ -7,6 +7,8 @@
 #include <iostream>
 #include <string>
 #include <deque>
+#include <functional>
+#include <typeindex>
 
 class State;
 class Transition;
@@ -39,36 +41,57 @@ class State
 public:
 	std::string stateName;
 	std::vector<Transition> transitions;
-
 	State(std::string _stateName) : stateName(_stateName) {};
+};
 
-	void OnEnter();
-	void OnExit();
+class FsmEventSystem
+{
+	std::vector<std::function<void(const StateEvent&)>> listeners;
+public:
+	void AddListener(std::function< void(const StateEvent&)> cBack) {
+		listeners.push_back(cBack);
+	}
+	void Dispatch(const StateEvent& event) {
+		for (auto& cBack : listeners) {
+			cBack(event);
+		}
+	}
 };
 
 class StateMachine
 {
+	FsmEventSystem events;
 public:
 	std::vector<State> states;
 	State* initialStatePtr = nullptr;
 	State* currentStatePtr = nullptr; // memory address of the current state
 	std::deque<std::string> stateHistory; // fixed-size historty of state names
-	
-
 	StateMachine(size_t historySize = 10) : maxHistory(historySize) {}
 	void SendEvent(const std::string& eventStr);
 	std::string GetPreviousStateName();
 	void Initialize();
+	void AddListener(std::function<void(const StateEvent&)> cBack) {
+		events.AddListener(cBack);
+	}
 private:
 	size_t maxHistory;
-	void AddToHistory(const std::string& stateName);
 
+	void AddToHistory(const std::string& stateName);
+	void NotifyStateEntered(const std::string& stateName) {
+		//std::cout << "Entering state: " << stateName << "\n";
+		events.Dispatch({ EnumStateEvents::STATE_ENTERED, stateName });
+	}
+	void NotifyStateExited(const std::string& stateName) {
+		//std::cout << "Exiting state: " << stateName << "\n";
+		events.Dispatch({ EnumStateEvents::STATE_EXITED, stateName });
+	}
 };
+
 void StateMachine::Initialize()
 {
 	currentStatePtr = initialStatePtr;
 	if (currentStatePtr != nullptr) {
-		currentStatePtr->OnEnter();
+		NotifyStateEntered(currentStatePtr->stateName);
 	}
 }
 void StateMachine::SendEvent(const std::string& eventStr)
@@ -83,11 +106,16 @@ void StateMachine::SendEvent(const std::string& eventStr)
 			// look up the new state by name
 			for (auto& state : states) {
 				if (state.stateName == transition.toStateName) {
+
+					// handle exit
 					AddToHistory(currentStatePtr->stateName);
-					currentStatePtr->OnExit();  
+					NotifyStateExited(currentStatePtr->stateName);
+					
+					// handle enter
 					currentStatePtr = &state;
-					currentStatePtr->OnEnter();
+					NotifyStateEntered(currentStatePtr->stateName);
 					std::cout << "Current state:" << currentStatePtr->stateName << "\n";
+
 					return;
 				}
 			}
@@ -108,17 +136,4 @@ std::string StateMachine::GetPreviousStateName()
 {
 	if (stateHistory.empty()) return {};
 	return stateHistory.back();
-}
-
-void State::OnEnter()
-{
-	StateEvent enterEvent { EnumStateEvents::STATE_ENTERED, stateName };
-	std::cout << "Entering state: " << stateName << "\n";
-	// pop off an event with the ^^StateEvent payload
-}
-void State::OnExit()
-{
-	StateEvent exitEvent { EnumStateEvents::STATE_EXITED, stateName };
-	std::cout << "Exiting state: " << stateName << "\n";
-	// pop off an event with the ^^StateEvent payload
 }
