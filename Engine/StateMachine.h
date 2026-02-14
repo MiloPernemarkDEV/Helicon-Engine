@@ -61,28 +61,31 @@ public:
 class StateMachine
 {
 	FsmEventSystem events;
+
 public:
 	std::vector<State> states;
 	State* initialStatePtr = nullptr;
 	State* currentStatePtr = nullptr; // memory address of the current state
 	std::deque<std::string> stateHistory; // fixed-size historty of state names
+
+	// specify history size in constructor
 	StateMachine(size_t historySize = 10) : maxHistory(historySize) {}
-	void SendEvent(const std::string& eventStr);
+	
 	std::string GetPreviousStateName();
+	void SendEvent(const std::string& eventStr);
 	void Initialize();
 	void AddListener(std::function<void(const StateEvent&)> cBack) {
 		events.AddListener(cBack);
 	}
+
 private:
 	size_t maxHistory;
 
 	void AddToHistory(const std::string& stateName);
 	void NotifyStateEntered(const std::string& stateName) {
-		//std::cout << "Entering state: " << stateName << "\n";
 		events.Dispatch({ EnumStateEvents::STATE_ENTERED, stateName });
 	}
 	void NotifyStateExited(const std::string& stateName) {
-		//std::cout << "Exiting state: " << stateName << "\n";
 		events.Dispatch({ EnumStateEvents::STATE_EXITED, stateName });
 	}
 };
