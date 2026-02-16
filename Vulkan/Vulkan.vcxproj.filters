@@ -23,4 +23,9 @@
     <None Include="Shaders\shader.frag" />
     <None Include="Shaders\shader.vert" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Notes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
