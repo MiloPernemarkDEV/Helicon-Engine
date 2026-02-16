@@ -270,3 +270,62 @@
 // Dynamic state
 // while most of the pipeline state needs to be baked into the pipeline state, a limited amount of the state can be changed withouth 
 // recreating the pipeline at draw time. Examples are size of the viewport, line width and blend constants.
+
+///////////////////////
+//				     //
+//  PIPELINE LAYOUT  //
+//					 //
+///////////////////////
+
+// You can use uniform values in shaders, which are globals similar to dynamic state variables that can be changed at drawing time	
+// To alter the behavoiur of the shaders withouth having to recreate them.
+// Commonly used to pass transformation matrix to the vertex shader or texture samplers to the fragment shader 
+// The uniform values need to be specified during pipeline creation by creating a VkPipelineLayout object.
+
+/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+////////////////////
+//				  //
+//  RENDER PASSES //
+//				  //
+////////////////////
+
+// A render pass in Vulkan describes how framebuffer attachments are used during rendering.
+// It does NOT perform rendering itself.
+// Instead, it defines the structure and rules for a rendering operation.
+
+// You can think of it as a contract:
+//
+// "These images will be used in this way, in this order, with these layout transitions."
+
+// A render pass describes:
+
+// 1. Attachments
+//    Images that will be used during rendering.
+//    These can be:
+//    - Color attachments (what you see on screen)
+//    - Depth attachments (depth testing)
+//    - Stencil attachments
+//    - Resolve attachments (for MSAA)
+
+// Each attachment specifies:
+//    - Format (must match the swapchain format for color)
+//    - Load operation (clear, load, or don't care)
+//    - Store operation (store result or discard it)
+//    - Initial layout (layout before render pass begins)
+//    - Final layout (layout after render pass ends)
+
+// 2. Subpasses
+//    A render pass can contain multiple subpasses.
+//    Each subpass represents one logical phase of rendering.
+//
+//    For example:
+//    Subpass 0: Geometry rendering
+//    Subpass 1: Post-processing
+//
+//    In our simple case we only use ONE subpass.
+//
+//    A subpass defines:
+//      - Which attachments are used as color targets
+//      - Which attachment is used as depth
+//      - Which are input attachments
