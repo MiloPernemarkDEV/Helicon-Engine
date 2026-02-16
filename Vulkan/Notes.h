@@ -235,7 +235,7 @@
 // a number of pipelines to represent all the different combinations of states we want to use in our rendering operations.
 // On the other hand the driver can optimize the pipeline much better because of that. 
 
-/*-------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*------------------------------------*/
 
 ///////////////////////
 //				     //
@@ -264,3 +264,9 @@
 // A clip coordinate is a four dimensional vector from the vertex shader that is turned into a normalized device coordinate by dividing the whole vector by its last component
 // yeah wtf 
 // These normalized device coordinates are homogeneous coordinates
+
+//----------------------------//
+
+// Dynamic state
+// while most of the pipeline state needs to be baked into the pipeline state, a limited amount of the state can be changed withouth 
+// recreating the pipeline at draw time. Examples are size of the viewport, line width and blend constants.
