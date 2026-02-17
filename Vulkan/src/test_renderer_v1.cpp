@@ -19,12 +19,9 @@
 #include <algorithm>
 #include <fstream>
 
-// Accidentally followed the old tutorial, going to create a v2 using the newer tutorial that utilizes RAII, 
-// Id like to use RAII when we implement the game engine renderer just to avoid needing to manually destroy everything correctly 
-// like we do here 
-namespace v1
+namespace HeliconVulkanRenderer
 {
-	// ==========================================
+// ==========================================
 //           CONSTANTS & VALIDATION
 // ==========================================
 	constexpr uint32_t WIDTH = 800;
@@ -40,11 +37,11 @@ namespace v1
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
 
-#ifdef NDEBUG
+	#ifdef NDEBUG
 	const bool enableValidationLayers = false;
-#else 
+	#else 
 	const bool enableValidationLayers = true;
-#endif
+	#endif
 
 	// ==========================================
 	//             HELPER STRUCTS
@@ -115,7 +112,6 @@ namespace v1
 		uint32_t currentFrame = 0;
 
 		bool framebufferResized = false;
-
 
 		// ==========================================
 		//               INITIALIZATION
@@ -197,7 +193,7 @@ namespace v1
 			allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 			allocInfo.commandPool = commandPool;
 			allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-			allocInfo.commandBufferCount = (uint32_t) commandBuffers.size();
+			allocInfo.commandBufferCount = (uint32_t)commandBuffers.size();
 
 			if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
 				throw std::runtime_error("failed to allocate command buffers!");
@@ -919,7 +915,7 @@ namespace v1
 			}
 
 			vkResetFences(device, 1, &inFlightFences[currentFrame]);
-			
+
 			vkResetCommandBuffer(commandBuffers[currentFrame], 0);
 
 			recordCommandBuffer(commandBuffers[currentFrame], imageIndex);
@@ -927,7 +923,7 @@ namespace v1
 			VkSubmitInfo submitInfo{};
 			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-			VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame]};
+			VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame] };
 			VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 			submitInfo.waitSemaphoreCount = 1;
 			submitInfo.pWaitSemaphores = waitSemaphores;
@@ -936,7 +932,7 @@ namespace v1
 			submitInfo.commandBufferCount = 1;
 			submitInfo.pCommandBuffers = &commandBuffers[currentFrame];
 
-			VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame]};
+			VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame] };
 			submitInfo.signalSemaphoreCount = 1;
 			submitInfo.pSignalSemaphores = signalSemaphores;
 
@@ -951,7 +947,11 @@ namespace v1
 			presentInfo.pSwapchains = swapChains;
 			presentInfo.pImageIndices = &imageIndex;
 			presentInfo.pResults = nullptr;
-			
+
+			if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
+				throw std::runtime_error("failed to submit draw command buffer!");
+			}
+
 			result = vkQueuePresentKHR(presentQueue, &presentInfo);
 
 			if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
@@ -960,16 +960,8 @@ namespace v1
 			else if (result != VK_SUCCESS) {
 				throw std::runtime_error("failed to present swap chain image!");
 			}
-
 			currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
-
-			currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
-
-			if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
-				throw std::runtime_error("failed to submit draw command buffer!");
-			}
 		}
-
 
 		static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
 			VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -1013,10 +1005,10 @@ namespace v1
 			glfwTerminate();
 		}
 	};
-} // namespace v1
+} // HeliconVulkanRenderer
 
 int main() {
-	v1::HelloTriangleApplication app;
+	HeliconVulkanRenderer::HelloTriangleApplication app;
 
 	try { app.run(); }
 	catch (const std::exception& e) {
@@ -1026,4 +1018,5 @@ int main() {
 
 	return EXIT_SUCCESS;
 }
+
 
