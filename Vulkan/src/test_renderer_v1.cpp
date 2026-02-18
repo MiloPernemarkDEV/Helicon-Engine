@@ -29,12 +29,12 @@ namespace HeliconVulkanRenderer
 	constexpr uint32_t WIDTH = 800;
 	constexpr uint32_t HEIGHT = 600;
 
-	const int MAX_FRAMES_IN_FLIGHT = 2;
+	constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
 	const std::vector<const char*> validationLayers = {
 		"VK_LAYER_KHRONOS_validation"
 	};
-
+	
 	const std::vector<const char*> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
@@ -48,6 +48,13 @@ namespace HeliconVulkanRenderer
 	// ==========================================
 	//             HELPER STRUCTS
 	// ==========================================
+	
+	struct UniformBufferObject
+	{
+		glm::mat4 model;
+		glm::mat4 view;
+		glm::mat4 proj;
+	};
 
 	struct QueueFamilyIndices {
 		std::optional<uint32_t> graphicsFamily;
@@ -96,9 +103,14 @@ namespace HeliconVulkanRenderer
 	};
 	
 	const std::vector<Vertex> vertices = {
-		{{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
-		{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-		{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+		{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+		{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+		{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+		{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
+	};
+	
+	const std::vector<uint16_t> indices = {
+		0, 1, 2, 2, 3, 0
 	};
 	
 	// ==========================================
@@ -115,16 +127,16 @@ namespace HeliconVulkanRenderer
 
 	private:
 		GLFWwindow* window = nullptr;
-		VkInstance instance = nullptr;
+		VkInstance instance = VK_NULL_HANDLE;
 		VkDebugUtilsMessengerEXT debugMessenger = VK_NULL_HANDLE;
-		VkSurfaceKHR surface = nullptr;
+		VkSurfaceKHR surface = VK_NULL_HANDLE;
 		
 		VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-		VkDevice device = nullptr;
-		VkQueue graphicsQueue = nullptr;
-		VkQueue presentQueue = nullptr;
+		VkDevice device = VK_NULL_HANDLE;
+		VkQueue graphicsQueue = VK_NULL_HANDLE;
+		VkQueue presentQueue = VK_NULL_HANDLE;
 		
-		VkSwapchainKHR swapChain = nullptr;
+		VkSwapchainKHR swapChain = VK_NULL_HANDLE;
 		std::vector<VkImage> swapChainImages;
 		VkFormat swapChainImageFormat = {};
 		VkExtent2D swapChainExtent = {};
@@ -132,11 +144,13 @@ namespace HeliconVulkanRenderer
 		std::vector<VkImageView> swapChainImageViews;
 		
 		std::vector<VkFramebuffer> swapChainFramebuffers;
-		VkPipeline graphicsPipeline = nullptr;
-		VkRenderPass renderPass = nullptr;
-		VkPipelineLayout pipelineLayout = nullptr;
+		VkPipeline graphicsPipeline = VK_NULL_HANDLE;
+		VkRenderPass renderPass = VK_NULL_HANDLE;
+		VkPipelineLayout pipelineLayout = VK_NULL_HANDLE;
+		VkDescriptorSetLayout descriptorSetLayout;
+
 		
-		VkCommandPool commandPool = nullptr;
+		VkCommandPool commandPool = VK_NULL_HANDLE;
 		std::vector<VkCommandBuffer> commandBuffers;
 		
 		std::vector<VkSemaphore> imageAvailableSemaphores;
@@ -144,9 +158,11 @@ namespace HeliconVulkanRenderer
 		std::vector<VkFence> inFlightFences;
 		uint32_t currentFrame = 0;
 		
-		VkBuffer vertexBuffer = nullptr;
-		VkDeviceMemory vertexBufferMemory = nullptr;
-
+		VkBuffer vertexBuffer =	VK_NULL_HANDLE;
+		VkDeviceMemory vertexBufferMemory = VK_NULL_HANDLE;
+		VkBuffer indexBuffer = VK_NULL_HANDLE;
+		VkDeviceMemory indexBufferMemory = VK_NULL_HANDLE;
+		
 		bool framebufferResized = false;
 
 		// ==========================================
@@ -175,47 +191,140 @@ namespace HeliconVulkanRenderer
 			createSwapChain();         
 			createImageViews();		
 			createRenderPass();
+			createDescriptorSetLayout();
 			createGraphicsPipeline();
 			createFrameBuffers();
 			createCommandpool();
 			createVertexBuffer();
+			createIndexBuffer();
 			createCommandBuffer();
 			createSyncObjects();
 		}
 		
-		void createVertexBuffer()
+		void createDescriptorSetLayout()
+		{
+			VkDescriptorSetLayoutBinding uboLayoutBinding{};
+			uboLayoutBinding.binding = 0;
+			uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			uboLayoutBinding.descriptorCount = 1;
+			uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+			uboLayoutBinding.pImmutableSamplers = nullptr;
+			
+			VkDescriptorSetLayoutCreateInfo layoutInfo{};
+			layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+			layoutInfo.bindingCount = 1;
+			layoutInfo.pBindings = &uboLayoutBinding;
+			
+			if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS)
+			{
+				throw std::runtime_error("Failed to create descriptor set layout!");
+			}
+		}
+		
+		void createIndexBuffer() {
+			VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
+
+			VkBuffer stagingBuffer;
+			VkDeviceMemory stagingBufferMemory;
+			createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+			void* data;
+			vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
+			memcpy(data, indices.data(), (size_t) bufferSize);
+			vkUnmapMemory(device, stagingBufferMemory);
+
+			createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
+
+			copyBuffer(stagingBuffer, indexBuffer, bufferSize);
+
+			vkDestroyBuffer(device, stagingBuffer, nullptr);
+			vkFreeMemory(device, stagingBufferMemory, nullptr);
+		}
+		
+		void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, 
+			VkBuffer& buffer, VkDeviceMemory& bufferMemory)
 		{
 			VkBufferCreateInfo bufferInfo = {};
 			bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-			bufferInfo.size = sizeof(vertices[0]) * vertices.size();
-			bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+			bufferInfo.size = size;
+			bufferInfo.usage = usage;
 			bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 			
-			if (vkCreateBuffer(device, &bufferInfo, nullptr, &vertexBuffer) != VK_SUCCESS)
+			if (vkCreateBuffer(device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS)
 			{
-				throw std::runtime_error("failed to create vertex buffer!");
+				throw std::runtime_error("failed to create buffer!");
 			}
 			
 			VkMemoryRequirements memRequirements;
-			vkGetBufferMemoryRequirements(device, vertexBuffer, &memRequirements);
+			vkGetBufferMemoryRequirements(device, buffer, &memRequirements);
 			
 			VkMemoryAllocateInfo allocInfo = {};
 			allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 			allocInfo.allocationSize = memRequirements.size;
-			allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits,
-				VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+			allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
 			
-			if (vkAllocateMemory(device, &allocInfo, nullptr, &vertexBufferMemory) != VK_SUCCESS)
+			if (vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)
 			{
-				throw std::runtime_error("failed to allocate vertex buffer memory!");
+				throw std::runtime_error("failed to allocate buffer memory!");
 			}
 			
-			vkBindBufferMemory(device, vertexBuffer, vertexBufferMemory, 0);
+			vkBindBufferMemory(device, buffer, bufferMemory, 0);
+		}
+		
+		void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+			VkCommandBufferAllocateInfo allocInfo{};
+			allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+			allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+			allocInfo.commandPool = commandPool;
+			allocInfo.commandBufferCount = 1;
+
+			VkCommandBuffer commandBuffer;
+			vkAllocateCommandBuffers(device, &allocInfo, &commandBuffer);
 			
+			VkCommandBufferBeginInfo beginInfo{};
+			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+			beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+			vkBeginCommandBuffer(commandBuffer, &beginInfo);
+			
+			VkBufferCopy copyRegion{};
+			copyRegion.srcOffset = 0; // Optional
+			copyRegion.dstOffset = 0; // Optional
+			copyRegion.size = size;
+			vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+			
+			vkEndCommandBuffer(commandBuffer);
+			
+			VkSubmitInfo submitInfo{};
+			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+			submitInfo.commandBufferCount = 1;
+			submitInfo.pCommandBuffers = &commandBuffer;
+
+			vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
+			vkQueueWaitIdle(graphicsQueue);
+			
+			vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+		}
+		
+		void createVertexBuffer() {
+			VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+
+			VkBuffer stagingBuffer;
+			VkDeviceMemory stagingBufferMemory;
+			createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT 
+				| VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
 			void* data;
-			vkMapMemory(device, vertexBufferMemory, 0, bufferInfo.size, 0, &data);	
-			memcpy(data, vertices.data(), (size_t)bufferInfo.size);
-			vkUnmapMemory(device, vertexBufferMemory);
+			vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
+			memcpy(data, vertices.data(), (size_t) bufferSize);
+			vkUnmapMemory(device, stagingBufferMemory);
+
+			createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 
+				VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
+			
+			copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
+			vkDestroyBuffer(device, stagingBuffer, nullptr);
+			vkFreeMemory(device, stagingBufferMemory, nullptr);
 		}
 		
 		uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
@@ -307,13 +416,17 @@ namespace HeliconVulkanRenderer
 			VkClearValue clearColor = { {{0.0f, 0.0f, 0.0f, 1.0f}} };
 			renderPassInfo.clearValueCount = 1;
 			renderPassInfo.pClearValues = &clearColor;
-
+			
 			vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 			vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 			
 			VkBuffer vertexBuffers[] = { vertexBuffer };
 			VkDeviceSize offsets[] = { 0 };
+			vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
+
+			vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+			
 			vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 
 			VkViewport viewport{};
@@ -330,7 +443,7 @@ namespace HeliconVulkanRenderer
 			scissor.extent = swapChainExtent;
 			vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-			vkCmdDraw(commandBuffer, static_cast<uint32_t>(vertices.size()), 1, 0, 0);
+			vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 			vkCmdEndRenderPass(commandBuffer);
 
 			if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
@@ -537,8 +650,8 @@ namespace HeliconVulkanRenderer
 
 			VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 			pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-			pipelineLayoutInfo.setLayoutCount = 0;
-			pipelineLayoutInfo.pSetLayouts = nullptr;
+			pipelineLayoutInfo.setLayoutCount = 1;
+			pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
 			pipelineLayoutInfo.pushConstantRangeCount = 0;
 			pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
@@ -1071,6 +1184,11 @@ namespace HeliconVulkanRenderer
 		// ==========================================
 		void cleanup() {
 			cleanupSwapChain();
+			
+			vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
+			
+			vkDestroyBuffer(device, indexBuffer, nullptr);
+			vkFreeMemory(device, indexBufferMemory, nullptr);
 			
 			vkDestroyBuffer(device, vertexBuffer, nullptr);
 			vkFreeMemory(device, vertexBufferMemory, nullptr);
