@@ -1,27 +1,24 @@
 #include "Application.h"
-//#include "VectormathTesting.h"
-#include <memory>
 
 int main ()
 {
-	
-	std::unique_ptr<Application> app = std::make_unique<Application>(); // Shifting between stack allocating or doing like this
+	Application app;
 
-	if (app->LaunchCoreSystems() == Application::LaunchState::Error)
+	if (app.LaunchCoreSystems() == Application::LaunchState::Error)
 	{
-		return 1;
+		return EXIT_FAILURE;
 	}
 
-	if (app->LaunchModules() == Application::LaunchState::Error)
+	if (app.LaunchModules() == Application::LaunchState::Error)
 	{
-		return 1;
+		return EXIT_FAILURE;
 	}
 	
-	app->RunGame();	
+	app.RunGame();	
 
-	app->ShutdownModules();
+	app.ShutdownModules();
 
-	app->ShutdownCoreSystems();
+	app.ShutdownCoreSystems();
 
-	return 0;
+	return EXIT_SUCCESS;
 }
