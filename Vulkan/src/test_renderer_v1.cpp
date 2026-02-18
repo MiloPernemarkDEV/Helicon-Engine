@@ -25,9 +25,6 @@
 
 namespace HeliconVulkanRenderer
 {
-// ==========================================
-//           CONSTANTS & VALIDATION
-// ==========================================
 	constexpr uint32_t WIDTH = 800;
 	constexpr uint32_t HEIGHT = 600;
 
@@ -46,10 +43,6 @@ namespace HeliconVulkanRenderer
 	#else 
 	const bool enableValidationLayers = true;
 	#endif
-
-	// ==========================================
-	//             HELPER STRUCTS
-	// ==========================================
 	
 	struct UniformBufferObject
 	{
@@ -114,10 +107,10 @@ namespace HeliconVulkanRenderer
 	const std::vector<uint16_t> indices = {
 		0, 1, 2, 2, 3, 0
 	};
-	
-	// ==========================================
-	//             MAIN CLASS
-	// ==========================================
+
+	/**
+	 * @brief Helicon Game Engine renderer made with the Vulkan graphics API, first prototype 
+	 */
 	class HcTestRenderer {
 	public:
 		void run() {
@@ -171,9 +164,9 @@ namespace HeliconVulkanRenderer
 		
 		bool m_framebufferResized = false;
 
-		// ==========================================
-		//               INITIALIZATION
-		// ==========================================
+		/**
+		 * @brief Initializes window creation. Needs to be refactored out 
+		 */
 		void initWindow() {
 			glfwInit();
 			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -188,6 +181,9 @@ namespace HeliconVulkanRenderer
 			app->m_framebufferResized = true;
 		}
 
+		/**
+		 * @brief Initializes Helicon's graphics renderer 
+		 */
 		void initVulkan() {
 			createInstance();          
 			setupDebugMessenger();     
@@ -488,10 +484,6 @@ namespace HeliconVulkanRenderer
 			}
 		}
 
-		// ==========================================
-		//           FRAME BUFFER CREATION
-		// ==========================================
-
 		void createFrameBuffers() {
 			m_swapChainFramebuffers.resize(m_swapChainImageViews.size());
 			for (size_t i = 0; i < m_swapChainImageViews.size(); i++) {
@@ -513,11 +505,7 @@ namespace HeliconVulkanRenderer
 				}
 			}
 		}
-
-		// ==========================================
-		//         RENDER PASS CREATION
-		// ==========================================
-
+		
 		void createRenderPass() {
 			VkAttachmentDescription color_attachment{};
 			color_attachment.format = m_swapChainImageFormat;
@@ -560,10 +548,6 @@ namespace HeliconVulkanRenderer
 				throw std::runtime_error("failed to create render pass!");
 			}
 		}
-
-		// ==========================================
-		//         GRAPHICS PIPELINE CREATION
-		// ==========================================
 
 		void createGraphicsPipeline() {
 			auto vert_shader_code = readFile("Shaders/vert.spv");
@@ -712,10 +696,6 @@ namespace HeliconVulkanRenderer
 			vkDestroyShaderModule(m_device, frag_shader_module, nullptr);
 		}
 
-		// ==========================================
-		//			    SHADER MODULE
-		// ==========================================
-
 		VkShaderModule createShaderModule(const std::vector<char>& code) {
 			VkShaderModuleCreateInfo create_info{};
 			create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -729,10 +709,6 @@ namespace HeliconVulkanRenderer
 
 			return shader_module;
 		}
-
-		// ==========================================
-		//           IMAGE VIEW CREATION
-		// ==========================================
 
 		void createImageViews() {
 			m_swapChainImageViews.resize(m_swapChainImages.size());
@@ -758,10 +734,7 @@ namespace HeliconVulkanRenderer
 				}
 			}
 		}
-
-		// ==========================================
-		//           SWAP CHAIN CREATION
-		// ==========================================
+		
 		void createSwapChain() {
 			SwapChainSupportDetails swap_chain_support = querySwapChainSupport(m_physicalDevice);
 
@@ -813,19 +786,13 @@ namespace HeliconVulkanRenderer
 			m_swapChainImageFormat = surface_format.format;
 			m_swapChainExtent = extent;
 		}
-
-		// ==========================================
-		//           SURFACE CREATION
-		// ==========================================
+		
 		void createSurface() {
 			if (glfwCreateWindowSurface(m_instance, m_window, nullptr, &m_surface) != VK_SUCCESS) {
 				throw std::runtime_error("failed to create window surface");
 			}
 		}
-
-		// ==========================================
-		//         PHYSICAL DEVICE SELECTION
-		// ==========================================
+		
 		void pickPhysicalDevice() {
 			uint32_t device_count = 0;
 			vkEnumeratePhysicalDevices(m_instance, &device_count, nullptr);
@@ -870,10 +837,7 @@ namespace HeliconVulkanRenderer
 
 			return required_extensions.empty();
 		}
-
-		// ==========================================
-		//          LOGICAL DEVICE CREATION
-		// ==========================================
+		
 		void createLogicalDevice() {
 			QueueFamilyIndices family_indices = findQueueFamilies(m_physicalDevice);
 			std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -910,10 +874,7 @@ namespace HeliconVulkanRenderer
 			vkGetDeviceQueue(m_device, family_indices.graphicsFamily.value(), 0, &m_graphicsQueue);
 			vkGetDeviceQueue(m_device, family_indices.presentFamily.value(), 0, &m_presentQueue);
 		}
-
-		// ==========================================
-		//             SWAPCHAIN HELPERS
-		// ==========================================
+		
 		VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& available_formats) {
 			for (const auto& available_format : available_formats) {
 				if (available_format.format == VK_FORMAT_B8G8R8A8_SRGB &&
@@ -966,10 +927,7 @@ namespace HeliconVulkanRenderer
 			return details;
 		}
 
-		// ==========================================
-		//			     LOADING FILE
-		// ==========================================
-
+		
 		static std::vector<char> readFile(const std::string& filename) {
 			std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
@@ -987,10 +945,7 @@ namespace HeliconVulkanRenderer
 			std::cout << filename << " size: " << buffer.size() << '\n';
 			return buffer;
 		}
-
-		// ==========================================
-		//             QUEUE FAMILY HELPERS
-		// ==========================================
+		
 		QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
 			QueueFamilyIndices family_indices;
 			uint32_t queue_family_count = 0;
@@ -1012,10 +967,7 @@ namespace HeliconVulkanRenderer
 			}
 			return family_indices;
 		}
-
-		// ==========================================
-		//         DEBUG MESSENGER SETUP
-		// ==========================================
+		
 		void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& create_info) {
 			create_info = {};
 			create_info.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -1052,14 +1004,10 @@ namespace HeliconVulkanRenderer
 			auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 			if (func != nullptr) func(instance, debug_messenger, pAllocator);
 		}
-
-		// ==========================================
-		//            INSTANCE CREATION
-		// ==========================================
+		
 		void createInstance() {
 			if (enableValidationLayers && !checkValidationLayerSupport())
 				throw std::runtime_error("Validation layers requested, but not available");
-
 			
 			VkApplicationInfo app_info{};
 			app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -1117,10 +1065,7 @@ namespace HeliconVulkanRenderer
 			if (enableValidationLayers) extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 			return extensions;
 		}
-
-		// ==========================================
-		//              MAIN LOOP
-		// ==========================================
+		
 		void mainLoop() {
 			while (!glfwWindowShouldClose(m_window)) {
 				glfwPollEvents();
@@ -1234,10 +1179,7 @@ namespace HeliconVulkanRenderer
 			std::cerr << "Validation layer: " << p_call_back_data->pMessage << '\n';
 			return VK_FALSE;
 		}
-
-		// ==========================================
-		//               CLEANUP
-		// ==========================================
+		
 		void cleanup() {
 			cleanupSwapChain();
 			
