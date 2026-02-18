@@ -1,15 +1,14 @@
-// ==========================================
-//             INCLUDES & DEFINES
-// ==========================================
 #define VK_USE_PLATFORM_WIN32_KHR
 #define NOMINMAX 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
-#define GLM_FORCE_RADIANS
+
+#define GLM_FORCE_RADIANS // Macro is not used? 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
 #include <chrono>
 #include <iostream>
 #include <stdexcept>
@@ -81,27 +80,27 @@ namespace HeliconVulkanRenderer
 		
 		static VkVertexInputBindingDescription getBindingDescription()
 		{
-			VkVertexInputBindingDescription bindingDescription = {};	
-			bindingDescription.binding = 0;
-			bindingDescription.stride = sizeof(Vertex);
-			bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-			return bindingDescription;
+			VkVertexInputBindingDescription binding_description = {};	
+			binding_description.binding = 0;
+			binding_description.stride = sizeof(Vertex);
+			binding_description.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+			return binding_description;
 		}
 		
 		static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions()
 		{
-			std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions = {};
-			attributeDescriptions[0].binding = 0;
-			attributeDescriptions[0].location = 0;
-			attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
-			attributeDescriptions[0].offset = offsetof(Vertex, pos);
+			std::array<VkVertexInputAttributeDescription, 2> attribute_descriptions = {};
+			attribute_descriptions[0].binding = 0;
+			attribute_descriptions[0].location = 0;
+			attribute_descriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+			attribute_descriptions[0].offset = offsetof(Vertex, pos);
 			
-			attributeDescriptions[1].binding = 0;
-			attributeDescriptions[1].location = 1;
-			attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-			attributeDescriptions[1].offset = offsetof(Vertex, color);
+			attribute_descriptions[1].binding = 0;
+			attribute_descriptions[1].location = 1;
+			attribute_descriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+			attribute_descriptions[1].offset = offsetof(Vertex, color);
 			
-			return attributeDescriptions;
+			return attribute_descriptions;
 		}
 	};
 	
