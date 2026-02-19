@@ -46,9 +46,9 @@ namespace HeliconVulkanRenderer
 	
 	struct UniformBufferObject
 	{
-		glm::mat4 model;
-		glm::mat4 view;
-		glm::mat4 proj;
+		alignas(16)glm::mat4 model;
+		alignas(16)glm::mat4 view;
+		alignas(16)glm::mat4 proj;
 	};
 
 	struct QueueFamilyIndices {
@@ -168,6 +168,9 @@ namespace HeliconVulkanRenderer
 		std::vector<VkDeviceMemory> m_uniformBuffersMemory;
 		std::vector<void*> m_uniformBuffersMapped;
 		
+		VkDescriptorPool m_descriptorPool = VK_NULL_HANDLE;
+		std::vector<VkDescriptorSet> m_descriptorSets;
+		
 		bool m_framebufferResized = false;
 
 		/**
@@ -206,8 +209,74 @@ namespace HeliconVulkanRenderer
 			createVertexBuffer();
 			createIndexBuffer();
 			createUniformBuffers();
+			createDescriptorPool();
+			createDescriptorSets();
 			createCommandBuffer();
 			createSyncObjects();
+		}
+
+		/**
+		 * Allocate one descriptor set for each frame in flight, all with the same layout.
+		 * They will be freed when the pool is destroyed
+		 */
+		void createDescriptorSets()
+		{
+			std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, m_descriptorSetLayout);
+			VkDescriptorSetAllocateInfo alloc_info{};
+			alloc_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+			alloc_info.descriptorPool = m_descriptorPool;
+			alloc_info.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+			alloc_info.pSetLayouts = layouts.data();
+			
+			m_descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
+			if (vkAllocateDescriptorSets(m_device, &alloc_info, m_descriptorSets.data()) != VK_SUCCESS)
+			{
+				throw std::runtime_error("failed to allocate descriptor sets");
+			}
+			
+			for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+			{
+				VkDescriptorBufferInfo buffer_info{};
+				buffer_info.buffer = m_uniformBuffers[i];
+				buffer_info.offset = 0;
+				buffer_info.range = sizeof(UniformBufferObject);
+				
+				VkWriteDescriptorSet descriptor_write{};
+				descriptor_write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				descriptor_write.dstSet = m_descriptorSets[i];
+				descriptor_write.dstBinding = 0;
+				descriptor_write.dstArrayElement = 0;
+				descriptor_write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				descriptor_write.descriptorCount = 1;
+				descriptor_write.pBufferInfo = &buffer_info;
+				descriptor_write.pImageInfo = nullptr;
+				descriptor_write.pTexelBufferView = nullptr;
+				
+				vkUpdateDescriptorSets(m_device, 1, &descriptor_write, 0, nullptr);
+			}
+			
+		}
+		
+		void createDescriptorPool()
+		{
+			// Describe what descriptor types our descriptor sets are going to contain
+			VkDescriptorPoolSize pool_size{};
+			pool_size.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			pool_size.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+			
+			VkDescriptorPoolCreateInfo pool_info{};
+			pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+			pool_info.poolSizeCount = 1;
+			pool_info.pPoolSizes = &pool_size;
+			
+			// Maximum number of descriptor sets that may be allocated 
+			pool_info.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+			
+			if (vkCreateDescriptorPool(m_device, &pool_info, nullptr, &m_descriptorPool) != VK_SUCCESS)
+			{
+				throw std::runtime_error("failed to create descriptor pool!");
+			}
+			
 		}
 		
 		void createUniformBuffers()
@@ -319,8 +388,8 @@ namespace HeliconVulkanRenderer
 			vkBeginCommandBuffer(command_buffer, &begin_info);
 			
 			VkBufferCopy copy_region{};
-			copy_region.srcOffset = 0; // Optional
-			copy_region.dstOffset = 0; // Optional
+			copy_region.srcOffset = 0; 
+			copy_region.dstOffset = 0; 
 			copy_region.size = size;
 			vkCmdCopyBuffer(command_buffer, src_buffer, dst_buffer, 1, &copy_region);
 			
@@ -484,6 +553,7 @@ namespace HeliconVulkanRenderer
 			scissor.extent = m_swapChainExtent;
 			vkCmdSetScissor(command_buffer, 0, 1, &scissor);
 
+			vkCmdBindDescriptorSets(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1, &m_descriptorSets[m_currentFrame], 0, nullptr);
 			vkCmdDrawIndexed(command_buffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 			vkCmdEndRenderPass(command_buffer);
 
@@ -648,7 +718,7 @@ namespace HeliconVulkanRenderer
 			rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
 			rasterizer.lineWidth = 1.0f;
 			rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-			rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+			rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 			rasterizer.depthBiasEnable = VK_FALSE;
 			rasterizer.depthBiasConstantFactor = 0.0f;
 			rasterizer.depthBiasClamp = 0.0f;
@@ -1223,6 +1293,8 @@ namespace HeliconVulkanRenderer
 					vkFreeMemory(m_device, m_uniformBuffersMemory[i], nullptr);
 				}
 			}
+			vkDestroyDescriptorPool(m_device, m_descriptorPool, nullptr);
+			
 			vkDestroyDescriptorSetLayout(m_device, m_descriptorSetLayout, nullptr);
 			
 			vkDestroyBuffer(m_device, m_indexBuffer, nullptr);

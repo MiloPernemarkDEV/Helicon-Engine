@@ -1,62 +1,43 @@
 #include "Application.h"
 
-
-Application::LaunchState Application::LaunchCoreSystems()
+namespace Helicon
 {
-
-#ifdef _DEBUG // might be bad to remove logs from release build 
-
-	if (!Helicon::Logger::Init())
+	bool Application::hcLaunchCoreSystems()
 	{
-		HE_LOG_ERROR("Failed to initialize logger");
-		return LaunchState::Error;
+		if (enableEngineLogger) {
+			if (Logger::hcInitializeEngineLogger() != HC_SUCCESS) {
+				throw std::runtime_error("Failed tto initialize the engine logger!");
+			}
+		}
+
+		if (m_HcWindow.hcInitializeWindow() != HC_SUCCESS) {
+			throw std::runtime_error("Failed to initialize the window!");
+		}
+
+		return HC_SUCCESS;
 	}
 
-#endif
-
-	if (!m_Window.Init()) 
+	bool Application::hcLaunchModules()
 	{
-		HE_LOG_ERROR("Failed to initialize window.");
-		return LaunchState::Error;
+
+		return HC_SUCCESS;
 	}
 
-	if (!m_Time.Init())
+
+	void Application::hcGameLoop()
 	{
-		HE_LOG_ERROR("Failed to initialize Time");
-		return LaunchState::Error;
+
 	}
 
-	return LaunchState::Success;
-}
 
-Application::LaunchState Application::LaunchModules()
-{
-
-	return LaunchState::Success;
-}
-
-
-void Application::RunGame()
-{
-
-	while (!m_Window.ShouldCloseWindow())
+	void Application::hcShutdownModules()
 	{
-		m_Time.Update();
-		m_Window.ProcessEvents();
+
+	}
+
+	void Application::hcShutdownCoreSystems()
+	{
+
 	}
 }
 
-
-void Application::ShutdownModules()
-{
-
-}
-
-void Application::ShutdownCoreSystems()
-{
-
-
-	m_Time.Shutdown();
-	m_Window.Shutdown();
-	Helicon::Logger::Shutdown();
-}

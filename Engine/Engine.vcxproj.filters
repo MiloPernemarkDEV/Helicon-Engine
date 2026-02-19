@@ -1,52 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="renderer\GLContext.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\glad.c">
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="core\Logger.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\Shader.cpp">
-      <Filter>renderer</Filter>
+    <ClCompile Include="core\HcWindow.cpp">
+      <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\Window.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="core\Time.cpp">
+    <ClCompile Include="Helicon.cpp" />
+    <ClCompile Include="core\HcInput.cpp">
       <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine.h" />
     <ClInclude Include="math\Vec3.h">
       <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\GLContext.h">
-      <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="core\Logger.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\Shader.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\Window.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="core\Time.h">
+    <ClInclude Include="core\Defines.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="core\DllDefines.h">
+    <ClInclude Include="core\HcWindow.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="core\MathDefines.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\ICoreSystem.h">
+    <ClInclude Include="Helicon.h" />
+    <ClInclude Include="core\HcInput.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
