@@ -70,7 +70,10 @@ namespace HeliconVulkanRenderer
 	{
 		glm::vec2 pos;
 		glm::vec3 color;
-		
+
+		/**
+		 * Describes how vertex data is laid out in memory so that it can be provided to the vertex shader
+		 */
 		static VkVertexInputBindingDescription getBindingDescription()
 		{
 			VkVertexInputBindingDescription binding_description = {};	
@@ -79,7 +82,10 @@ namespace HeliconVulkanRenderer
 			binding_description.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 			return binding_description;
 		}
-		
+
+		/**
+		 * Tells vulkan how to read each attribute (position, color, etc.) from a vertex.
+		 */
 		static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions()
 		{
 			std::array<VkVertexInputAttributeDescription, 2> attribute_descriptions = {};
@@ -220,7 +226,12 @@ namespace HeliconVulkanRenderer
 				vkMapMemory(m_device, m_uniformBuffersMemory[i], 0, buffer_size, 0, &m_uniformBuffersMapped[i]);
 			}
 		}
-		
+
+		/**
+		 * Think of it as the shape of the descriptor set, 
+		 * When creating pipelines or allocating the descriptor sets themselves 
+		 * you have to use the layout.
+		 */
 		void createDescriptorSetLayout()
 		{
 			VkDescriptorSetLayoutBinding ubo_layout_binding{};
@@ -415,11 +426,21 @@ namespace HeliconVulkanRenderer
 			}
 		}
 
+		/**
+		 * @brief Records commands into a primary command buffer.
+		 * In Vulkan, commands must be recorded into a buffer before submission.
+		 * This function begins the render pass, binds resources, and issues the draw.
+		 * 
+		 * notes:
+		 * record as few as possible but as many as necessary per frame.
+		 * The buffer can contain commands that differ. 
+		 * some can push constants, be action type or descriptor set etc. 
+		 */
 		void recordCommandBuffer(VkCommandBuffer command_buffer, uint32_t image_index) {
 			VkCommandBufferBeginInfo begin_info{};
 			begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-			begin_info.flags = 0; // Optional
-			begin_info.pInheritanceInfo = nullptr; // Optional
+			begin_info.flags = 0; 
+			begin_info.pInheritanceInfo = nullptr; 
 
 			if (vkBeginCommandBuffer(command_buffer, &begin_info) != VK_SUCCESS) {
 				throw std::runtime_error("failed to begin recording command buffer!");
@@ -471,12 +492,18 @@ namespace HeliconVulkanRenderer
 			}
 		}
 
+		/**
+		 * @brief Creates the graphics command pool used for allocating per-frame command buffers.
+		 * The pool is reset every frame to allow command buffer reuse.
+		 */
 		void createCommandpool() {
 			QueueFamilyIndices queue_family_indices = findQueueFamilies(m_physicalDevice);
 
 			VkCommandPoolCreateInfo pool_info{};
+			
 			pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-			pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+			// allows any command buffer to be reset to initial state by calling VkResetCommandBuffer.
+			pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; 
 			pool_info.queueFamilyIndex = queue_family_indices.graphicsFamily.value();
 
 			if (vkCreateCommandPool(m_device, &pool_info, nullptr, &m_commandPool) != VK_SUCCESS) {
@@ -585,6 +612,7 @@ namespace HeliconVulkanRenderer
 			dynamic_state.dynamicStateCount = static_cast<uint32_t>(dynamic_states.size());
 			dynamic_state.pDynamicStates = dynamic_states.data();
 			
+			// Which buffer exists and how to read each attribute from those buffers
 			VkPipelineVertexInputStateCreateInfo vertex_input_info{};
 			vertex_input_info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 			
@@ -787,13 +815,19 @@ namespace HeliconVulkanRenderer
 			m_swapChainExtent = extent;
 		}
 		
-		void createSurface() {
+		void createSurface() 
+		{
 			if (glfwCreateWindowSurface(m_instance, m_window, nullptr, &m_surface) != VK_SUCCESS) {
 				throw std::runtime_error("failed to create window surface");
 			}
 		}
-		
-		void pickPhysicalDevice() {
+
+		/**
+		 * Finds a GPU (physical device) on the computer and checks if it supports Vulkan.
+		 * The physical device lets us query its properties and capabilities.
+		 */
+		void pickPhysicalDevice() 
+		{
 			uint32_t device_count = 0;
 			vkEnumeratePhysicalDevices(m_instance, &device_count, nullptr);
 
@@ -942,7 +976,6 @@ namespace HeliconVulkanRenderer
 			file.read(buffer.data(), file_size);
 
 			file.close();
-			std::cout << filename << " size: " << buffer.size() << '\n';
 			return buffer;
 		}
 		
