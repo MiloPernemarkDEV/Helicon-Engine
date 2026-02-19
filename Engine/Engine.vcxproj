@@ -161,26 +161,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="core\HcInput.cpp" />
+    <ClCompile Include="core\HcWindow.cpp" />
     <ClCompile Include="core\Logger.cpp" />
-    <ClCompile Include="core\Time.cpp" />
+    <ClCompile Include="Helicon.cpp" />
     <ClCompile Include="renderer\glad.c" />
-    <ClCompile Include="renderer\GLContext.cpp" />
-    <ClCompile Include="renderer\Shader.cpp" />
-    <ClCompile Include="renderer\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="core\DllDefines.h" />
-    <ClInclude Include="core\ICoreSystem.h" />
+    <ClInclude Include="core\Defines.h" />
+    <ClInclude Include="core\HcInput.h" />
+    <ClInclude Include="core\HcWindow.h" />
     <ClInclude Include="core\Logger.h" />
-    <ClInclude Include="core\MathDefines.h" />
-    <ClInclude Include="core\Time.h" />
-    <ClInclude Include="Engine.h" />
+    <ClInclude Include="Helicon.h" />
     <ClInclude Include="math\Vec3.h" />
-    <ClInclude Include="renderer\GLContext.h" />
-    <ClInclude Include="StateMachine.h" />
-    <ClInclude Include="Vec2.h" />
-    <ClInclude Include="renderer\Shader.h" />
-    <ClInclude Include="renderer\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

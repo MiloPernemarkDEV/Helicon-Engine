@@ -12,7 +12,7 @@
 
 namespace Helicon
 {   
-    bool Logger::Init() 
+    bool Logger::hcInitializeEngineLogger() 
     {        
         const std::string logDirectory = "Logs";
 
@@ -31,7 +31,7 @@ namespace Helicon
 
        
         HLog(LogLevel::Debug, "Logger Init.", __FILE__, __LINE__);
-        return true;
+        return HC_SUCCESS;
     }
 
     void Logger::HLog(LogLevel level, const char* message, const char* file, int line) 
@@ -60,7 +60,7 @@ namespace Helicon
         }
     }
 
-    void Logger::Shutdown()
+    void Logger::hcShutdownLogger()
     {
         HE_LOG("Logger shutdown.");
         // Todo 

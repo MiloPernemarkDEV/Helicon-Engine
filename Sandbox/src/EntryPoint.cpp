@@ -2,23 +2,22 @@
 
 int main ()
 {
-	Application app;
+	Helicon::Application app;
 
-	if (app.LaunchCoreSystems() == Application::LaunchState::Error)
-	{
-		return EXIT_FAILURE;
+	if (app.hcLaunchCoreSystems() != HC_SUCCESS) {
+		throw std::runtime_error("Failed to launch core systems");
 	}
 
-	if (app.LaunchModules() == Application::LaunchState::Error)
+	if (app.hcLaunchModules() != HC_SUCCESS)
 	{
-		return EXIT_FAILURE;
+		throw std::runtime_error("Failed to launch modules");
 	}
 	
-	app.RunGame();	
+	app.hcGameLoop();	
 
-	app.ShutdownModules();
+	app.hcShutdownModules();
 
-	app.ShutdownCoreSystems();
+	app.hcShutdownCoreSystems();
 
 	return EXIT_SUCCESS;
 }

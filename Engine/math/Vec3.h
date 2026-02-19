@@ -4,7 +4,9 @@
 
 #pragma once
 
-#include "core/MathDefines.h"
+// #include "core/MathDefines.h"
+
+#include "core/Defines.h"
 #include <cmath>
 #include <algorithm>
 

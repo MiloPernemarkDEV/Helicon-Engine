@@ -12,7 +12,7 @@
 // Consider adding init/shutdown log macros for each system to be able to adjust them from here instead of every file 
 
 #pragma once
-#include "DllDefines.h" 
+#include "Defines.h" 
 
 
 namespace Helicon 
@@ -28,12 +28,12 @@ namespace Helicon
     class ENGINE_API Logger 
     {
         public:
-            static bool Init();
+            static bool hcInitializeEngineLogger();
 
             static void HLog(LogLevel level, const char* message, const char* file, int line);
 
             // Not doing anything yet 
-            static void Shutdown();
+            static void hcShutdownLogger();
         };
 }
 
