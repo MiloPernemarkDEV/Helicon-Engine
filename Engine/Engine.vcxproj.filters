@@ -32,10 +32,9 @@
     <ClInclude Include="core\HcInput.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="Vec2.h">
-      <Filter>math</Filter>
+    <ClInclude Include="core\HcArray.h">
+      <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="StateMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
@@ -46,9 +45,6 @@
     </Filter>
     <Filter Include="renderer">
       <UniqueIdentifier>{c58ea176-18df-43bb-b6f3-13435eba726d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="state_machine">
-      <UniqueIdentifier>{30289ccb-290f-405c-8dad-e527022d76b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

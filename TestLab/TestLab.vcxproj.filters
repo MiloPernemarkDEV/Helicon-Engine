@@ -23,5 +23,8 @@
     <ClInclude Include="Vec3OpsTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HcArrayTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

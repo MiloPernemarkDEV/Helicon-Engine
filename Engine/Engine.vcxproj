@@ -169,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\Defines.h" />
+    <ClInclude Include="core\HcArray.h" />
     <ClInclude Include="core\HcInput.h" />
     <ClInclude Include="core\HcWindow.h" />
     <ClInclude Include="core\Logger.h" />
