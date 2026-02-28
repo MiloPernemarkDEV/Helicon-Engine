@@ -5,7 +5,10 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 
-#define GLM_FORCE_RADIANS // Macro is not used? 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
+#define GLM_FORCE_RADIANS 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -171,6 +174,12 @@ namespace HeliconVulkanRenderer
 		VkDescriptorPool m_descriptorPool = VK_NULL_HANDLE;
 		std::vector<VkDescriptorSet> m_descriptorSets;
 		
+		VkBuffer stagingBuffer;
+		VkDeviceMemory stagingBufferMemory;
+		
+		VkImage textureImage;
+		VkDeviceMemory textureImageMemory;
+		
 		bool m_framebufferResized = false;
 
 		/**
@@ -206,6 +215,7 @@ namespace HeliconVulkanRenderer
 			createGraphicsPipeline();
 			createFrameBuffers();
 			createCommandpool();
+			createTextureImage();
 			createVertexBuffer();
 			createIndexBuffer();
 			createUniformBuffers();
@@ -213,6 +223,99 @@ namespace HeliconVulkanRenderer
 			createDescriptorSets();
 			createCommandBuffer();
 			createSyncObjects();
+		}
+		
+		VkCommandBuffer beginSingleTimeCommands()
+		{
+			VkCommandBufferAllocateInfo alloc_info = {};
+			alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+			alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+			alloc_info.commandPool = m_commandPool;
+			alloc_info.commandBufferCount = 1;
+			
+			VkCommandBuffer command_buffer{};
+			vkAllocateCommandBuffers(m_device, &alloc_info, &command_buffer);
+
+			VkCommandBufferBeginInfo begin_info{};
+			begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+			begin_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+			vkBeginCommandBuffer(command_buffer, &begin_info);
+			return command_buffer;
+		}
+		
+		void endSingleTimeCommands(VkCommandBuffer commandBuffer) {
+			vkEndCommandBuffer(commandBuffer);
+
+			VkSubmitInfo submitInfo{};
+			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+			submitInfo.commandBufferCount = 1;
+			submitInfo.pCommandBuffers = &commandBuffer;
+
+			vkQueueSubmit(m_graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
+			vkQueueWaitIdle(m_graphicsQueue);
+
+			vkFreeCommandBuffers(m_device, m_commandPool, 1, &commandBuffer);
+		}
+
+		void createTextureImage() 
+		{
+			int texWidth, texHeight, texChannels;
+			stbi_uc* pixels = stbi_load("textures/texture.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+			VkDeviceSize imageSize = texWidth * texHeight * 4;
+
+			if (!pixels) {
+				throw std::runtime_error("failed to load texture image!");
+			}
+			
+
+			VkBuffer stagingBuffer;
+			VkDeviceMemory stagingBufferMemory;
+			createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+			void* data;
+			vkMapMemory(m_device, stagingBufferMemory, 0, imageSize, 0, &data);
+			memcpy(data, pixels, static_cast<size_t>(imageSize));
+			vkUnmapMemory(m_device, stagingBufferMemory);
+
+			stbi_image_free(pixels);
+
+			createImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
+		}
+		
+		void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory) {
+			VkImageCreateInfo imageInfo{};
+			imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+			imageInfo.imageType = VK_IMAGE_TYPE_2D;
+			imageInfo.extent.width = width;
+			imageInfo.extent.height = height;
+			imageInfo.extent.depth = 1;
+			imageInfo.mipLevels = 1;
+			imageInfo.arrayLayers = 1;
+			imageInfo.format = format;
+			imageInfo.tiling = tiling;
+			imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+			imageInfo.usage = usage;
+			imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+			imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+			if (vkCreateImage(m_device, &imageInfo, nullptr, &image) != VK_SUCCESS) {
+				throw std::runtime_error("failed to create image!");
+			}
+
+			VkMemoryRequirements memRequirements;
+			vkGetImageMemoryRequirements(m_device, image, &memRequirements);
+
+			VkMemoryAllocateInfo allocInfo{};
+			allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+			allocInfo.allocationSize = memRequirements.size;
+			allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+
+			if (vkAllocateMemory(m_device, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
+				throw std::runtime_error("failed to allocate image memory!");
+			}
+
+			vkBindImageMemory(m_device, image, imageMemory, 0);
 		}
 
 		/**
@@ -371,39 +474,14 @@ namespace HeliconVulkanRenderer
 			vkBindBufferMemory(m_device, buffer, buffer_memory, 0);
 		}
 		
-		void copyBuffer(VkBuffer src_buffer, VkBuffer dst_buffer, VkDeviceSize size) {
-			VkCommandBufferAllocateInfo alloc_info{};
-			alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-			alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-			alloc_info.commandPool = m_commandPool;
-			alloc_info.commandBufferCount = 1;
+		void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+			VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
-			VkCommandBuffer command_buffer;
-			vkAllocateCommandBuffers(m_device, &alloc_info, &command_buffer);
-			
-			VkCommandBufferBeginInfo begin_info{};
-			begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-			begin_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+			VkBufferCopy copyRegion{};
+			copyRegion.size = size;
+			vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
 
-			vkBeginCommandBuffer(command_buffer, &begin_info);
-			
-			VkBufferCopy copy_region{};
-			copy_region.srcOffset = 0; 
-			copy_region.dstOffset = 0; 
-			copy_region.size = size;
-			vkCmdCopyBuffer(command_buffer, src_buffer, dst_buffer, 1, &copy_region);
-			
-			vkEndCommandBuffer(command_buffer);
-			
-			VkSubmitInfo submit_info{};
-			submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-			submit_info.commandBufferCount = 1;
-			submit_info.pCommandBuffers = &command_buffer;
-
-			vkQueueSubmit(m_graphicsQueue, 1, &submit_info, VK_NULL_HANDLE);
-			vkQueueWaitIdle(m_graphicsQueue);
-			
-			vkFreeCommandBuffers(m_device, m_commandPool, 1, &command_buffer);
+			endSingleTimeCommands(commandBuffer);
 		}
 		
 		void createVertexBuffer() {
@@ -461,6 +539,10 @@ namespace HeliconVulkanRenderer
 			createFrameBuffers();
 		}
 
+		/**
+		* The semaphore waiting process happens on the GPU while 
+		* the fence waiting process happens on the CPU for CPU->GPU sync
+		*/
 		void createSyncObjects() {
 			m_imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 			m_renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);

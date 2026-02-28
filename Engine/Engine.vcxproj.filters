@@ -32,6 +32,9 @@
     <ClInclude Include="core\HcInput.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="core\HcArray.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">

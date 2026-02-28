@@ -4,11 +4,14 @@
 #include <iostream>
 #include "Vec3.h"
 #include "Vec3OpsTest.h"
+#include "HcArrayTest.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
-    Vec3OpsTest::RunVec3Tests();
+    // std::cout << "Hello World!\n";
+    // Vec3OpsTest::RunVec3Tests();
+
+    HcArrayTest::runTests();
 
 }
 

@@ -48,12 +48,6 @@ namespace Helicon
             case LogLevel::Debug:   
                 PLOGD << file << ":" << " " << colorCyan << line << "." << " " << message << colorReset;
                 break;
-            case LogLevel::Info:    
-                PLOGI << file << ":" << " " << colorGreen << line << "." << " " << message << colorReset;
-                break;
-            case LogLevel::Warning: 
-                PLOGW << file << ":" << " " << colorYellow << line << "." << " " << message << colorReset;
-                break;
             case LogLevel::Error:   
                 PLOGE << file << ":" << " " << colorRed << line << "." << " " << message << colorReset;
                 break;
@@ -62,7 +56,7 @@ namespace Helicon
 
     void Logger::hcShutdownLogger()
     {
-        HE_LOG("Logger shutdown.");
+        Z_LOG("Logger shutdown.");
         // Todo 
     }
 }
