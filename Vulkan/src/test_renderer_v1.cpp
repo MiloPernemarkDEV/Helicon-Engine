@@ -123,9 +123,9 @@ namespace HeliconVulkanRenderer
 	class HcTestRenderer {
 	public:
 		void run() {
-			initWindow();
+			// initWindow();
 			initVulkan();
-			mainLoop();
+			// mainLoop();
 			cleanup();
 		}
 
@@ -185,7 +185,7 @@ namespace HeliconVulkanRenderer
 		/**
 		 * @brief Initializes window creation. Needs to be refactored out 
 		 */
-		void initWindow() {
+		/* void initWindow() {
 			glfwInit();
 			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 			glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -193,6 +193,7 @@ namespace HeliconVulkanRenderer
 			glfwSetWindowUserPointer(m_window, this);
 			glfwSetFramebufferSizeCallback(m_window, framebufferResizeCallback);
 		}
+		*/
 
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
 			auto app = reinterpret_cast<HcTestRenderer*>(glfwGetWindowUserPointer(window));
@@ -379,7 +380,6 @@ namespace HeliconVulkanRenderer
 			{
 				throw std::runtime_error("failed to create descriptor pool!");
 			}
-			
 		}
 		
 		void createUniformBuffers()
@@ -1251,14 +1251,7 @@ namespace HeliconVulkanRenderer
 			return extensions;
 		}
 		
-		void mainLoop() {
-			while (!glfwWindowShouldClose(m_window)) {
-				glfwPollEvents();
-				drawFrame();
-			}
-
-			vkDeviceWaitIdle(m_device);
-		}
+		
 
 		void drawFrame() {
 			vkWaitForFences(m_device, 1, &m_inFlightFences[m_currentFrame], VK_TRUE, UINT64_MAX);
@@ -1407,14 +1400,15 @@ namespace HeliconVulkanRenderer
 			vkDestroySurfaceKHR(m_instance, m_surface, nullptr);
 			vkDestroyInstance(m_instance, nullptr);
 
-			glfwDestroyWindow(m_window);
+			// glfwDestroyWindow(m_window);
 
-			glfwTerminate();
+			// glfwTerminate();
 		}
 	};
 } // HeliconVulkanRenderer
 
-int main() {
+/* 
+	int main() {
 	HeliconVulkanRenderer::HcTestRenderer test_renderer;
 
 	try { test_renderer.run(); }
@@ -1425,3 +1419,5 @@ int main() {
 
 	return EXIT_SUCCESS;
 }
+
+*/

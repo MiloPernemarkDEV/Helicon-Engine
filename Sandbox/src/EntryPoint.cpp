@@ -1,23 +1,24 @@
 #include "Application.h"
+	
 
 int main ()
 {
 	Helicon::Application app;
 
-	if (app.hcLaunchCoreSystems() != HC_SUCCESS) {
+	if (app.LaunchCoreSystems() != HC_SUCCESS) {
 		throw std::runtime_error("Failed to launch core systems");
 	}
 
-	if (app.hcLaunchModules() != HC_SUCCESS)
+	if (app.LaunchModules() != HC_SUCCESS)
 	{
 		throw std::runtime_error("Failed to launch modules");
 	}
 	
-	app.hcGameLoop();	
+	app.GameLoop();	
 
-	app.hcShutdownModules();
+	app.ShutdownModules();
 
-	app.hcShutdownCoreSystems();
+	app.ShutdownCoreSystems();
 
 	return EXIT_SUCCESS;
 }

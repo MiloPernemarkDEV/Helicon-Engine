@@ -128,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(OutDir);$(SolutionDir)Engine;$(SolutionDir);$(SolutionDir)libraries\include;$(SolutionDir)Engine\renderer;$(SolutionDir)Engine\math;$(SolutionDir)Sandbox</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir);$(SolutionDir)Engine;$(SolutionDir);$(SolutionDir)libraries\include;$(SolutionDir)Engine\renderer;$(SolutionDir)Engine\math;$(SolutionDir)Sandbox;$(SolutionDir)\Vulkan\src;$(VULKAN_SDK)\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <UseFullPaths>false</UseFullPaths>
     </ClCompile>
@@ -136,7 +136,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Configuration)-$(Platform)\RenderingOpenGL\;$(SolutionDir)bin\Debug;$(SolutionDir)bin\Debug-x64;C:\Dev\PersonalProjects\HeliconEngine\libraries\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;glfw3.lib;Vulkan.lib;user32.lib
+;gdi32.lib
+;shell32.lib
+;advapi32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,13 +151,16 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(OutDir);$(SolutionDir)Engine;$(SolutionDir);$(SolutionDir)libraries\include;$(SolutionDir)Engine\renderer;$(SolutionDir)Engine\math;$(SolutionDir)Sandbox</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir);$(SolutionDir)Engine;$(SolutionDir);$(SolutionDir)libraries\include;$(SolutionDir)Engine\renderer;$(SolutionDir)Engine\math;$(SolutionDir)Sandbox;$(SolutionDir)\Vulkan\src;$(VULKAN_SDK)\Include</AdditionalIncludeDirectories>
       <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Engine.lib;glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;glfw3.lib;Vulkan.lib;user32.lib
+;gdi32.lib
+;shell32.lib
+;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Configuration)-$(Platform)\RenderingOpenGL\;$(SolutionDir)bin\Debug;$(SolutionDir)bin\Debug-x64;C:\Dev\PersonalProjects\HeliconEngine\libraries\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

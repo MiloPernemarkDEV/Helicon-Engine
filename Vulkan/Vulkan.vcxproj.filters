@@ -18,6 +18,9 @@
     <ClCompile Include="src\test_renderer_v1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\shader.frag" />
@@ -25,6 +28,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Notes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RendDefines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

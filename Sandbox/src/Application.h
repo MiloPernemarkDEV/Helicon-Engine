@@ -1,35 +1,28 @@
 #pragma once
 
-
-#include "Helicon.h"
-#include "GLFW/glfw3.h"
+#include "core/Defines.h"
+#include "core/HcWin32Window.h"
 #include <stdexcept>
+#include "IRenderer.h"
+#include <Windows.h>
 
 namespace Helicon
 {
+    class Application
+    {
+    public:
+        Application() = default;
 
-	class Application
-	{
-	public:
+        bool LaunchCoreSystems();
+        bool LaunchModules();
 
-		Application() = default;
+        void GameLoop();
 
-		bool hcLaunchCoreSystems();
+        void ShutdownModules();
+        void ShutdownCoreSystems();
 
-		bool hcLaunchModules();
-
-		void hcGameLoop();
-
-		void hcShutdownModules();
-
-		void hcShutdownCoreSystems();
-
-	private:
-		HcWindow m_HcWindow;
-	};
+    private:
+        HcWin32Window m_Window;
+        rend::IRenderer* m_renderer = rend::hcCreateRenderer();
+    };
 }
-
-
-
-
-
