@@ -5,11 +5,12 @@ int main ()
 {
 	Helicon::Application app;
 
-	if (app.LaunchCoreSystems() != HC_SUCCESS) {
+	if (!app.LaunchCoreSystems()) 
+	{
 		throw std::runtime_error("Failed to launch core systems");
 	}
 
-	if (app.LaunchModules() != HC_SUCCESS)
+	if (!app.LaunchModules())
 	{
 		throw std::runtime_error("Failed to launch modules");
 	}

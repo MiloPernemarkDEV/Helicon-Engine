@@ -3,9 +3,36 @@
 #include "core/HcArray.h"
 #include <string>
 #include <iostream>
+#include <vector>
+#include <chrono>
 
 class HcArrayTest {
 public:
+
+	static void testHcArrayPerformanceComparedToVector() {
+		const size_t N = 10'000'000;
+
+	    {
+			std::vector<int> stdv;
+			auto start = std::chrono::high_resolution_clock::now();
+			for (size_t i = 0; i < N; ++i)
+				stdv.push_back(i);
+			auto end = std::chrono::high_resolution_clock::now();
+			std::cout << "std::vector push_back: "
+				<< duration_cast<std::chrono::milliseconds>(end - start).count() << " ms\n";
+		}
+
+		{
+			HcArray<int> hc;
+			auto start = std::chrono::high_resolution_clock::now();
+			for (size_t i = 0; i < N; ++i)
+				hc.push_back(i);
+			auto end = std::chrono::high_resolution_clock::now();
+			std::cout << "HcArray push_back: "
+				<< duration_cast<std::chrono::milliseconds>(end - start).count() << " ms\n";
+		}
+	}
+
 	static void testIfContainerContainsContent(const HcArray<std::string>& container)
 	{
 		HcArray<std::string> testStrings;
@@ -51,9 +78,7 @@ public:
 
 	static void runTests() {
 
-		HcArray<std::string> container;
-		testIfContainerContainsContent(container);
-		testIfContainerWorksDynamically();
+		testHcArrayPerformanceComparedToVector();
 	}
 };
 

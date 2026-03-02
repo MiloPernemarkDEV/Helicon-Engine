@@ -1,5 +1,8 @@
 #include "HcWin32Window.h"
 
+#include <stdint.h>
+using u32 = uint32_t;
+
 bool HcWin32Window::Initialize(HINSTANCE hInstance, int width, int height, const char* title)
 {
     m_hInstance = hInstance;
@@ -95,6 +98,15 @@ LRESULT CALLBACK HcWin32Window::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
         case WM_DESTROY:
             window->m_shouldClose = true;
             PostQuitMessage(0);
+            return 0;
+            case WM_SIZE:
+                u32 width = LOWORD(lParam);
+                u32 height = HIWORD(lParam);
+
+                // renderer->onResize(width, height);
+
+                // Detect resize and notify renderer the new width and height 
+                // onResize should only get the new values and not recreate the swapchain 
             return 0;
         }
     }

@@ -5,6 +5,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <intrin.h>
+#include <stdint.h>
+
+static constexpr uint32_t HC_WINDOW_WIDTH = 1280;
+static constexpr uint32_t HC_WINDOW_HEIGHT = 720;
 
 class ENGINE_API HcWin32Window
 {
@@ -22,4 +26,6 @@ private:
     HWND      m_hWnd = nullptr;
     HINSTANCE m_hInstance = nullptr;
     bool      m_shouldClose = false;
+
+
 };

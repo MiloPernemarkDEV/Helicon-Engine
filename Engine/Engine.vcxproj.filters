@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="renderer\glad.c">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="core\HcInput.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -34,9 +31,6 @@
     </Filter>
     <Filter Include="core">
       <UniqueIdentifier>{faa017be-c72c-4744-8103-1a3c800178ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="renderer">
-      <UniqueIdentifier>{c58ea176-18df-43bb-b6f3-13435eba726d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

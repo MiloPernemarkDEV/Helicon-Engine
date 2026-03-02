@@ -1,81 +1,60 @@
 #include "Renderer.h"
 #include <stdexcept>
 
-#include <iostream>
 
-namespace rend
-{
-	void Renderer::createVkInstance() {
+void Renderer::createVkInstance() {
+    if (enableValidationLayers && !m_validationHelper.checkValidationLayerSupport()) {
+        throw std::runtime_error("Validation layers requested, but not available!");
+    }
 
-		VkApplicationInfo app_info{};
-		app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-		app_info.pApplicationName = "Hello Triangle";
-		app_info.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-		app_info.pEngineName = "No Engine";
-		app_info.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-		app_info.apiVersion = VK_API_VERSION_1_0;
+    VkApplicationInfo appInfo{};
+    appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    appInfo.apiVersion = VK_API_VERSION_1_0;
 
-		VkInstanceCreateInfo create_info{};
-		create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-		create_info.pApplicationInfo = &app_info;
+    VkInstanceCreateInfo createInfo{};
+    createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    createInfo.pApplicationInfo = &appInfo;
 
-		if (vkCreateInstance(&create_info, nullptr, &m_vkInstance) != VK_SUCCESS) {
-			throw std::runtime_error("Failed to create Vulkan instance!");
-		}
-	}
+    auto extensions = m_validationHelper.getRequiredExtensions();
+    createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+    createInfo.ppEnabledExtensionNames = extensions.data();
 
-	bool checkValidationLayerSupport() {
-		uint32_t layer_count;
-		vkEnumerateInstanceLayerProperties(&layer_count, nullptr);
+    VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
+    if (enableValidationLayers) {
+        createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+        createInfo.ppEnabledLayerNames = validationLayers.data();
 
-		std::vector<VkLayerProperties> available_layers(layer_count);
-		vkEnumerateInstanceLayerProperties(&layer_count, available_layers.data());
+        m_validationHelper.populateDebugMessengerCreateInfo(debugCreateInfo);
+        createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
+    }
 
-		for (const char* layer_name : validationLayers) {
-			bool layer_found = false;
-			for (const auto& layer_properties : available_layers) {
-				if (strcmp(layer_name, layer_properties.layerName) == 0) {
-					layer_found = true;
-					break;
-				}
-			}
-			if (!layer_found) return false;
-		}
-		return true;
-	}
+     if (vkCreateInstance(&createInfo, nullptr, &m_vkInstance) != VK_SUCCESS) {
+        throw std::runtime_error("Failed to create Vulkan instance!");
+    }
+}
 
-	std::vector<const char*> Renderer::getRequiredExtensions() {
-		u32 glfw_extension_count = 0;
+bool Renderer::Initialize(HWND hwnd) {
+    createVkInstance();
 
-		const char** glfw_extensions = glfwGetRequiredInstanceExtensions(&glfw_extension_count);
+    m_validationHelper.setupDebugMessenger(m_vkInstance, m_debugMessenger);
 
-		std::vector<const char*> extensions(glfw_extensions, glfw_extensions + glfw_extension_count);
+    return true;
+}
 
-		if (enableValidationLayers)
-			extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+void Renderer::Shutdown() {
 
-		return extensions;
-	}
+    m_validationHelper.clear(m_vkInstance, m_debugMessenger);
 
-	IRenderer* hcCreateRenderer()
-	{
-		return new Renderer();
-	}
+    clearVkInstance();
+  
+}
 
-	void Renderer::hcInitializeRenderer()
-	{
-		createVkInstance();
-		std::cout << "Renderer: initialized!";
-	}
+IRenderer* hcCreateRenderer() {
+    return new Renderer();
+}
 
-	void Renderer::Shutdown()
-	{
-		// destroy instance etc.
-	}
-
-} // namespace rend
-
-
-
-
-
+void Renderer::clearVkInstance() {
+    if (m_vkInstance != VK_NULL_HANDLE) {
+        vkDestroyInstance(m_vkInstance, nullptr);
+    }
+}

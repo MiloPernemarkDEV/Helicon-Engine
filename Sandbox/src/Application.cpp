@@ -7,17 +7,21 @@ namespace Helicon
     bool Application::LaunchCoreSystems()
     {
         HINSTANCE hInstance = GetModuleHandle(nullptr);
-
-        if (!m_Window.Initialize(hInstance, 1280, 720, "Helicon Engine"))
+        if (!m_Window.Initialize(hInstance, HC_WINDOW_WIDTH, HC_WINDOW_HEIGHT, "Banana Farming Simulator:"))
         {
             throw std::runtime_error("Failed to initialize Win32 window!");
         }
+        
 
-        // Later can pass m_Window.GetHWND() into the Vulkan renderer
-        // e.g m_renderer->hcInitializeRenderer(m_Window.GetHWND());
-        m_renderer->hcInitializeRenderer();
+        if (!m_renderer->Initialize(m_Window.GetHWND())) 
+        {
+            throw std::runtime_error("Failed to initialize the renderer!");
 
-        return HC_SUCCESS;
+        }
+
+
+
+        return true;
     }
 
     bool Application::LaunchModules()

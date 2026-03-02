@@ -1,14 +1,18 @@
 #pragma once
 #include "RendDefines.h"
 
-namespace rend
-{
-    class RENDERER_API IRenderer
-    {
-    public:
-        virtual void hcInitializeRenderer() = 0;
-        virtual ~IRenderer() = default;
-    };
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
-    RENDERER_API IRenderer* hcCreateRenderer();
-}
+class RENDERER_API IRenderer
+{
+public:
+    virtual bool Initialize(HWND hWnd) = 0;
+    virtual ~IRenderer() = default;
+    virtual void Shutdown() = 0;
+};
+
+RENDERER_API IRenderer* hcCreateRenderer();
+
+
+

@@ -163,7 +163,6 @@
   <ItemGroup>
     <ClCompile Include="core\HcInput.cpp" />
     <ClCompile Include="core\HcWin32Window.cpp" />
-    <ClCompile Include="renderer\glad.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\Defines.h" />

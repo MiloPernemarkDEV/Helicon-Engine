@@ -23,6 +23,6 @@ namespace Helicon
 
     private:
         HcWin32Window m_Window;
-        rend::IRenderer* m_renderer = rend::hcCreateRenderer();
+        IRenderer* m_renderer = hcCreateRenderer();
     };
 }
