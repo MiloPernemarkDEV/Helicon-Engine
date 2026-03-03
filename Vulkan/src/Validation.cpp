@@ -9,6 +9,7 @@ bool Validation::checkValidationLayerSupport() {
     std::vector<VkLayerProperties> availableLayers(layerCount);
     vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
+    // Check if all of the layers we want actually exists on the system
     for (const char* layerName : validationLayers) {
         bool layerFound = false;
         for (const auto& layerProperties : availableLayers) {
@@ -24,8 +25,13 @@ bool Validation::checkValidationLayerSupport() {
 
 std::vector<const char*> Validation::getRequiredExtensions() {
     uint32_t glfwExtensionCount = 0;
-    const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-    std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+
+    const char* win32Extensions[] = {
+    "VK_KHR_surface",       
+    "VK_KHR_win32_surface"  
+    };
+
+    std::vector<const char*> extensions(std::begin(win32Extensions), std::end(win32Extensions));
 
     if (enableValidationLayers) {
         extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);

@@ -183,7 +183,7 @@ void HcWin32Window::RegisterWindowClass(HINSTANCE hInstance) {
     wc.lpfnWndProc = HcWin32Window::WndProc;
     wc.hInstance = hInstance;
     wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); // Give it a color!
+    wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
     wc.lpszClassName = "HeliconWindowClass";
 
     RegisterClassExA(&wc);

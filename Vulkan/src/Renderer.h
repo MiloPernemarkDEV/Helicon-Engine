@@ -12,6 +12,11 @@ private:
     void createVkInstance();
     void clearVkInstance();
 
+    void populateInstanceCreateInfo(
+        VkInstanceCreateInfo& createInfo,
+        VkApplicationInfo& appInfo,
+        VkDebugUtilsMessengerCreateInfoEXT& debugCreateInfo);
+
     VkInstance m_vkInstance = VK_NULL_HANDLE;
 
     // Validation
