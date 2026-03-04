@@ -57,6 +57,7 @@ void Validation::setupDebugMessenger(VkInstance instance, VkDebugUtilsMessengerE
     }
 }
 
+// Might be a bug check cleanup 
 void Validation::clear(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger) {
     if (enableValidationLayers) {
         DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);

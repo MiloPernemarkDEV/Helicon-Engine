@@ -4,7 +4,7 @@
 
 void Renderer::createVkInstance() 
 {
-    if (enableValidationLayers && !m_validationHelper.checkValidationLayerSupport()) 
+    if (enableValidationLayers && !validationHelper_.checkValidationLayerSupport()) 
     {
         throw std::runtime_error("Validation layers requested, but not available!");
     }
@@ -14,7 +14,7 @@ void Renderer::createVkInstance()
     VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{}; 
     populateInstanceCreateInfo(createInfo, appInfo, debugCreateInfo);
 
-    if (vkCreateInstance(&createInfo, nullptr, &m_vkInstance) != VK_SUCCESS) 
+    if (vkCreateInstance(&createInfo, nullptr, &vkInstance_) != VK_SUCCESS) 
     {
         throw std::runtime_error("Failed to create Vulkan instance!");
     }
@@ -24,7 +24,7 @@ bool Renderer::Initialize(HWND hWnd)
 {
     createVkInstance();
 
-    m_validationHelper.setupDebugMessenger(m_vkInstance, m_debugMessenger);
+    validationHelper_.setupDebugMessenger(vkInstance_, debugMessenger_);
 
     return true;
 }
@@ -32,10 +32,9 @@ bool Renderer::Initialize(HWND hWnd)
 void Renderer::Shutdown() 
 {
 
-    m_validationHelper.clear(m_vkInstance, m_debugMessenger);
-
+    deviceHelper_.clear(device_);
+    validationHelper_.clear(vkInstance_, debugMessenger_);
     clearVkInstance();
-  
 }
 
 IRenderer* hcCreateRenderer() 
@@ -45,8 +44,8 @@ IRenderer* hcCreateRenderer()
 
 void Renderer::clearVkInstance() 
 {
-    if (m_vkInstance != VK_NULL_HANDLE) {
-        vkDestroyInstance(m_vkInstance, nullptr);
+    if (vkInstance_ != VK_NULL_HANDLE) {
+        vkDestroyInstance(vkInstance_, nullptr);
     }
 }
 
@@ -62,15 +61,15 @@ void Renderer::populateInstanceCreateInfo(
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     createInfo.pApplicationInfo = &appInfo;
 
-    std::vector<const char*> extensions = m_validationHelper.getRequiredExtensions();
-    createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
-    createInfo.ppEnabledExtensionNames = extensions.data();
+    extensions_ = validationHelper_.getRequiredExtensions();
+    createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions_.size());
+    createInfo.ppEnabledExtensionNames = extensions_.data();
 
     if (enableValidationLayers) {
         createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
         createInfo.ppEnabledLayerNames = validationLayers.data();
 
-        m_validationHelper.populateDebugMessengerCreateInfo(debugCreateInfo);
+        validationHelper_.populateDebugMessengerCreateInfo(debugCreateInfo);
         createInfo.pNext = reinterpret_cast<VkDebugUtilsMessengerCreateInfoEXT*>(&debugCreateInfo);
     }
     else {

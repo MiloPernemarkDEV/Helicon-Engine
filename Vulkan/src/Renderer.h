@@ -1,12 +1,13 @@
 #pragma once
 #include "IRenderer.h"
 #include "Validation.h"
+#include "Device.h"
 
 class Renderer : public IRenderer {
 public:
     bool Initialize(HWND hwnd) override;
     void Shutdown() override;
-    VkInstance GetVkInstance() const { return m_vkInstance; }
+    VkInstance GetVkInstance() const { return vkInstance_; }
 
 private:
     void createVkInstance();
@@ -17,13 +18,17 @@ private:
         VkApplicationInfo& appInfo,
         VkDebugUtilsMessengerCreateInfoEXT& debugCreateInfo);
 
-    VkInstance m_vkInstance = VK_NULL_HANDLE;
+    std::vector<const char*> extensions_;
 
-    // Validation
-    VkDebugUtilsMessengerEXT m_debugMessenger = VK_NULL_HANDLE;
-    Validation m_validationHelper; 
+    // Vulkan core
+    VkInstance vkInstance_ = VK_NULL_HANDLE;
+    VkPhysicalDevice physicalDevice_ = VK_NULL_HANDLE;
+    VkDevice device_ = VK_NULL_HANDLE;
+    Device deviceHelper_;
 
-    // Device
-    VkPhysicalDevice m_physicalDevice = VK_NULL_HANDLE;
+
+    // Validation / Debugging
+    Validation validationHelper_;
+    VkDebugUtilsMessengerEXT debugMessenger_ = VK_NULL_HANDLE;
 
 };
