@@ -13,7 +13,9 @@ public:
     virtual void Shutdown() = 0;
 };
 
-RENDERER_API std::unique_ptr<IRenderer> hcCreateRenderer();
+// add to namespace
+RENDERER_API std::unique_ptr<IRenderer> CreateVulkanRenderer();
+
 
 
 

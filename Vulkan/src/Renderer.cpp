@@ -37,7 +37,7 @@ void Renderer::Shutdown()
     clearVkInstance();
 }
 
-std::unique_ptr<IRenderer> hcCreateRenderer() 
+std::unique_ptr<IRenderer> CreateVulkanRend() 
 {
     return std::make_unique<Renderer>();
 }
