@@ -136,7 +136,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Configuration)-$(Platform)\RenderingOpenGL\;$(SolutionDir)bin\Debug;$(SolutionDir)bin\Debug-x64;C:\Dev\PersonalProjects\HeliconEngine\libraries\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Engine.lib;glfw3.lib;Vulkan.lib;user32.lib
+      <AdditionalDependencies>Engine.lib;Vulkan.lib;user32.lib
 ;gdi32.lib
 ;shell32.lib
 ;advapi32.lib</AdditionalDependencies>

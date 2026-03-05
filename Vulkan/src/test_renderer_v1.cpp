@@ -1,9 +1,7 @@
+/*
+
 #define VK_USE_PLATFORM_WIN32_KHR
 #define NOMINMAX 
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3native.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -74,9 +72,9 @@ namespace HeliconVulkanRenderer
 		glm::vec2 pos;
 		glm::vec3 color;
 
-		/**
+		
 		 * Describes how vertex data is laid out in memory so that it can be provided to the vertex shader
-		 */
+		
 		static VkVertexInputBindingDescription getBindingDescription()
 		{
 			VkVertexInputBindingDescription binding_description = {};	
@@ -86,9 +84,9 @@ namespace HeliconVulkanRenderer
 			return binding_description;
 		}
 
-		/**
+	
 		 * Tells vulkan how to read each attribute (position, color, etc.) from a vertex.
-		 */
+		
 		static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions()
 		{
 			std::array<VkVertexInputAttributeDescription, 2> attribute_descriptions = {};
@@ -117,9 +115,9 @@ namespace HeliconVulkanRenderer
 		0, 1, 2, 2, 3, 0
 	};
 
-	/**
-	 * @brief Helicon Game Engine renderer made with the Vulkan graphics API, first prototype 
-	 */
+	
+	 @brief Helicon Game Engine renderer made with the Vulkan graphics API, first prototype 
+	
 	class HcTestRenderer {
 	public:
 		void run() {
@@ -182,10 +180,10 @@ namespace HeliconVulkanRenderer
 		
 		bool m_framebufferResized = false;
 
-		/**
-		 * @brief Initializes window creation. Needs to be refactored out 
-		 */
-		/* void initWindow() {
+		
+		 @brief Initializes window creation. Needs to be refactored out 
+		 
+		 void initWindow() {
 			glfwInit();
 			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 			glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -193,16 +191,16 @@ namespace HeliconVulkanRenderer
 			glfwSetWindowUserPointer(m_window, this);
 			glfwSetFramebufferSizeCallback(m_window, framebufferResizeCallback);
 		}
-		*/
+		
 
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
 			auto app = reinterpret_cast<HcTestRenderer*>(glfwGetWindowUserPointer(window));
 			app->m_framebufferResized = true;
 		}
 
-		/**
+		
 		 * @brief Initializes Helicon's graphics renderer 
-		 */
+		
 		void initVulkan() {
 			createInstance();          
 			setupDebugMessenger();     
@@ -319,10 +317,10 @@ namespace HeliconVulkanRenderer
 			vkBindImageMemory(m_device, image, imageMemory, 0);
 		}
 
-		/**
+		
 		 * Allocate one descriptor set for each frame in flight, all with the same layout.
 		 * They will be freed when the pool is destroyed
-		 */
+		 
 		void createDescriptorSets()
 		{
 			std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, m_descriptorSetLayout);
@@ -399,11 +397,11 @@ namespace HeliconVulkanRenderer
 			}
 		}
 
-		/**
+		
 		 * Think of it as the shape of the descriptor set, 
 		 * When creating pipelines or allocating the descriptor sets themselves 
 		 * you have to use the layout.
-		 */
+		 
 		void createDescriptorSetLayout()
 		{
 			VkDescriptorSetLayoutBinding ubo_layout_binding{};
@@ -539,10 +537,10 @@ namespace HeliconVulkanRenderer
 			createFrameBuffers();
 		}
 
-		/**
+		
 		* The semaphore waiting process happens on the GPU while 
 		* the fence waiting process happens on the CPU for CPU->GPU sync
-		*/
+		
 		void createSyncObjects() {
 			m_imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 			m_renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
@@ -577,16 +575,16 @@ namespace HeliconVulkanRenderer
 			}
 		}
 
-		/**
-		 * @brief Records commands into a primary command buffer.
-		 * In Vulkan, commands must be recorded into a buffer before submission.
-		 * This function begins the render pass, binds resources, and issues the draw.
-		 * 
+		/
+		 @brief Records commands into a primary command buffer.
+		 In Vulkan, commands must be recorded into a buffer before submission.
+		 *his function begins the render pass, binds resources, and issues the draw.
+		 
 		 * notes:
 		 * record as few as possible but as many as necessary per frame.
 		 * The buffer can contain commands that differ. 
 		 * some can push constants, be action type or descriptor set etc. 
-		 */
+		 
 		void recordCommandBuffer(VkCommandBuffer command_buffer, uint32_t image_index) {
 			VkCommandBufferBeginInfo begin_info{};
 			begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -644,10 +642,10 @@ namespace HeliconVulkanRenderer
 			}
 		}
 
-		/**
-		 * @brief Creates the graphics command pool used for allocating per-frame command buffers.
-		 * The pool is reset every frame to allow command buffer reuse.
-		 */
+		
+		 @brief Creates the graphics command pool used for allocating per-frame command buffers.
+		 The pool is reset every frame to allow command buffer reuse.
+		 
 		void createCommandpool() {
 			QueueFamilyIndices queue_family_indices = findQueueFamilies(m_physicalDevice);
 
@@ -974,10 +972,10 @@ namespace HeliconVulkanRenderer
 			}
 		}
 
-		/**
-		 * Finds a GPU (physical device) on the computer and checks if it supports Vulkan.
-		 * The physical device lets us query its properties and capabilities.
-		 */
+		
+		 Finds a GPU (physical device) on the computer and checks if it supports Vulkan.
+		 The physical device lets us query its properties and capabilities.
+		 
 		void pickPhysicalDevice() 
 		{
 			uint32_t device_count = 0;
@@ -1407,7 +1405,6 @@ namespace HeliconVulkanRenderer
 	};
 } // HeliconVulkanRenderer
 
-/* 
 	int main() {
 	HeliconVulkanRenderer::HcTestRenderer test_renderer;
 
@@ -1421,3 +1418,4 @@ namespace HeliconVulkanRenderer
 }
 
 */
+

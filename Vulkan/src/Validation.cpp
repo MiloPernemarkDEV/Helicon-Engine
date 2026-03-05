@@ -1,5 +1,4 @@
 #include "Validation.h"
-#include <GLFW/glfw3.h>
 #include <stdexcept>
 
 
