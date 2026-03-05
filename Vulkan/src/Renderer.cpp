@@ -37,6 +37,7 @@ void Renderer::Shutdown()
 
     deviceHelper.clear(handles.device_);
     validationHelper.clear(handles.vkInstance_, handles.debugMessenger_);
+    deviceHelper.destroySurface(handles.vkInstance_, handles.surface_);
     clearVkInstance();
 }
 

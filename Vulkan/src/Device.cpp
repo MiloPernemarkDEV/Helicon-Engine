@@ -117,7 +117,7 @@ void Device::clear(VkDevice& device)
 
 void Device::destroySurface(VkInstance& instance, VkSurfaceKHR surface)
 {
-
+	vkDestroySurfaceKHR(instance, surface, nullptr);
 }
 
 VkSurfaceKHR Device::CreateWin32WindowSurface(VkInstance instance, HWND hwnd, HINSTANCE hInstance, VkSurfaceKHR surface)
