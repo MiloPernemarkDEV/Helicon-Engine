@@ -31,6 +31,7 @@
   <ItemGroup>
     <ClInclude Include="Notes.h" />
     <ClInclude Include="src\Device.h" />
+    <ClInclude Include="src\HandleManager.h" />
     <ClInclude Include="src\IRenderer.h" />
     <ClInclude Include="src\RendDefines.h" />
     <ClInclude Include="src\Renderer.h" />

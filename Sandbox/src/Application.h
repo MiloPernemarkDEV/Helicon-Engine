@@ -31,7 +31,7 @@ namespace Helicon
     private:
         HINSTANCE hInstance_;
         HcWin32Window window_;
-        std::unique_ptr<IRenderer> renderer_ = CreateVulkanRend();
+        std::unique_ptr<IRenderer> renderer_ = CreateVulkanRenderer();
         bool hasShutCore_ = false;
         bool hasShutModules_ = false;
     };

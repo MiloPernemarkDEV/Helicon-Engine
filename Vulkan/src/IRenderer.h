@@ -8,7 +8,7 @@
 class RENDERER_API IRenderer
 {
 public:
-    virtual bool Initialize(HWND hWnd) = 0;
+    virtual bool Initialize(HWND hWnd, HINSTANCE hInstance) = 0;
     virtual ~IRenderer() = default;
     virtual void Shutdown() = 0;
 };

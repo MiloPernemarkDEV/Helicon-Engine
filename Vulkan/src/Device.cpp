@@ -3,7 +3,9 @@
 #include <stdexcept>
 #include <vector>
 
-void Device::pickPhysicalDevice(VkPhysicalDevice physicalDevice, VkInstance instance)
+
+
+void Device::pickPhysicalDevice(VkInstance instance, VkPhysicalDevice physicalDevice)
 {
 	uint32_t device_count = 0;
 
@@ -35,7 +37,7 @@ void Device::pickPhysicalDevice(VkPhysicalDevice physicalDevice, VkInstance inst
 	}
 }
 
-void Device::createLogicalDevice(VkPhysicalDevice physicalDevice)
+void Device::createLogicalDevice(VkPhysicalDevice physicalDevice, VkDevice device, VkQueue graphicsQueue)
 {
 	QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
@@ -64,6 +66,12 @@ void Device::createLogicalDevice(VkPhysicalDevice physicalDevice)
 	else {
 		createInfo.enabledLayerCount = 0;
 	}
+
+	if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create logical device!");
+	}
+
+	vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
 }
 
 bool Device::isDeviceSuitable(VkPhysicalDevice device) 
@@ -105,4 +113,23 @@ QueueFamilyIndices Device::findQueueFamilies(VkPhysicalDevice device) {
 void Device::clear(VkDevice& device)
 {
 	vkDestroyDevice(device, nullptr);
+}
+
+void Device::destroySurface(VkInstance& instance, VkSurfaceKHR surface)
+{
+
+}
+
+VkSurfaceKHR Device::CreateWin32WindowSurface(VkInstance instance, HWND hwnd, HINSTANCE hInstance, VkSurfaceKHR surface)
+{
+	VkWin32SurfaceCreateInfoKHR createInfo{};
+	createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+	createInfo.hwnd = hwnd;
+	createInfo.hinstance = hInstance;
+
+	if (vkCreateWin32SurfaceKHR(instance, &createInfo, nullptr, &surface) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create window surface");
+	}
+
+	return surface;
 }

@@ -2,12 +2,13 @@
 #include "IRenderer.h"
 #include "Validation.h"
 #include "Device.h"
+#include "HandleManager.h"
 
 class Renderer : public IRenderer {
 public:
-    bool Initialize(HWND hwnd) override;
+    bool Initialize(HWND hwnd, HINSTANCE hInstance) override;
     void Shutdown() override;
-    VkInstance GetVkInstance() const { return vkInstance_; }
+    VkInstance GetVkInstance() const { return handles.vkInstance_; }
 
 private:
     void createVkInstance();
@@ -20,15 +21,7 @@ private:
 
     std::vector<const char*> extensions_;
 
-    // Vulkan core
-    VkInstance vkInstance_ = VK_NULL_HANDLE;
-    VkPhysicalDevice physicalDevice_ = VK_NULL_HANDLE;
-    VkDevice device_ = VK_NULL_HANDLE;
-    Device deviceHelper_;
-
-
-    // Validation / Debugging
-    Validation validationHelper_;
-    VkDebugUtilsMessengerEXT debugMessenger_ = VK_NULL_HANDLE;
-
+    HandleManager handles;
+    Device deviceHelper;
+    Validation validationHelper;
 };

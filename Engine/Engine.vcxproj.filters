@@ -21,6 +21,9 @@
     <ClInclude Include="core\HcWin32Window.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="core\IHcWindow.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">

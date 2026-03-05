@@ -22,12 +22,16 @@ namespace Helicon
     {
         hInstance_ = GetModuleHandle(nullptr);
 
-        if (!window_.Initialize(hInstance_, HC_WINDOW_WIDTH, HC_WINDOW_HEIGHT, "Banana Farming Simulator"))
+        if (!window_.Initialize(hInstance_, HC_WINDOW_WIDTH, HC_WINDOW_HEIGHT, "Banana Farming Simulator")) 
+        {
             return false;
-
-        if (!renderer_->Initialize(window_.GetHWND()))
+        }
+            
+        if (!renderer_->Initialize(window_.GetHWND(), window_.GetHInstance()))
+        {
             return false;
-
+        }
+           
         window_.DestroyLaunchWindow();
 
         return true;

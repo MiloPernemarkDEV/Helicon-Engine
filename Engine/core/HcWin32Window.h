@@ -21,8 +21,10 @@ public:
     void DestroyLaunchWindow();
     void RegisterWindowClass(HINSTANCE hInstance);
 
+
     bool ShouldClose() const { return m_shouldClose; }
     HWND GetHWND() const { return m_hWnd; }
+    HINSTANCE GetHInstance() const { return m_hInstance; }
 
 private:
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
