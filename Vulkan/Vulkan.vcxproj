@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Device.cpp" />
+    <ClCompile Include="src\Instance.cpp" />
+    <ClCompile Include="src\PhysicalDevice.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
-    <ClCompile Include="src\test_renderer_v1.cpp" />
     <ClCompile Include="src\Validation.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -29,10 +29,9 @@
     <None Include="Shaders\shader.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Notes.h" />
-    <ClInclude Include="src\Device.h" />
-    <ClInclude Include="src\HandleManager.h" />
+    <ClInclude Include="src\Instance.h" />
     <ClInclude Include="src\IRenderer.h" />
+    <ClInclude Include="src\PhysicalDevice.h" />
     <ClInclude Include="src\RendDefines.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Validation.h" />

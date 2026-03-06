@@ -2,14 +2,13 @@
 #include <stdexcept>
 
 
-bool Validation::checkValidationLayerSupport() {
+bool Validation::checkValidationLayerSupport() const {
     uint32_t layerCount;
     vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
     std::vector<VkLayerProperties> availableLayers(layerCount);
     vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
-    // Check if all of the layers we want actually exists on the system
-    for (const char* layerName : validationLayers) {
+    for (const char* layerName : validationLayers_) {
         bool layerFound = false;
         for (const auto& layerProperties : availableLayers) {
             if (strcmp(layerName, layerProperties.layerName) == 0) {
@@ -22,7 +21,7 @@ bool Validation::checkValidationLayerSupport() {
     return true;
 }
 
-std::vector<const char*> Validation::getRequiredExtensions() {
+std::vector<const char*> Validation::getRequiredExtensions() const {
     uint32_t glfwExtensionCount = 0;
 
     const char* win32Extensions[] = {
@@ -38,27 +37,35 @@ std::vector<const char*> Validation::getRequiredExtensions() {
     return extensions;
 }
 
-void Validation::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
+void Validation::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) const {
     createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-    createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-    createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+    createInfo.messageSeverity = 
+        VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | 
+        VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | 
+        VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+
+    createInfo.messageType = 
+        VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | 
+        VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | 
+        VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+
     createInfo.pfnUserCallback = debugCallback;
 }
 
-void Validation::setupDebugMessenger(VkInstance instance, VkDebugUtilsMessengerEXT& debugMessenger) {
+void Validation::setup(VkInstance instance) {
     if (!enableValidationLayers) return;
     VkDebugUtilsMessengerCreateInfoEXT createInfo;
     populateDebugMessengerCreateInfo(createInfo);
 
-    if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
+    if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger_) != VK_SUCCESS) {
         throw std::runtime_error("Failed to set up debug messenger!");
     }   
 }
 
-void Validation::clear(VkInstance& instance, VkDebugUtilsMessengerEXT& debugMessenger) {
+void Validation::destroy(VkInstance instance) {
     if (enableValidationLayers) {
-        DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
+        DestroyDebugUtilsMessengerEXT(instance, debugMessenger_, nullptr);
     }
 }
 
@@ -72,7 +79,7 @@ VkResult Validation::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkD
 void Validation::DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
     auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
     if (func != nullptr) func(instance, debugMessenger, pAllocator);
-}
+}   
 
 VKAPI_ATTR VkBool32 VKAPI_CALL Validation::debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
     std::cerr << "Validation layer: " <<messageSeverity << pCallbackData->pMessage << std::endl;
