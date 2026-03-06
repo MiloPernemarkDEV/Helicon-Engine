@@ -38,7 +38,7 @@ void Instance::destroy()
 void Instance::populateInstanceCreateInfo(
     VkInstanceCreateInfo& createInfo,
     VkApplicationInfo& appInfo,
-    VkDebugUtilsMessengerCreateInfoEXT& debugCreateInfo) // we don’t use this here for pNext
+    VkDebugUtilsMessengerCreateInfoEXT& debugCreateInfo) 
 {
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.pApplicationName = "MyApp";

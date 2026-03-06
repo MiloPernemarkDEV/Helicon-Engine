@@ -15,14 +15,9 @@ Renderer::Renderer()
 
 bool Renderer::Initialize(HWND hWnd, HINSTANCE hInstance)
 {
-    // 1. Get the required extensions first!
     auto requiredExtensions = validation_.getRequiredExtensions();
+    instance_.setExtensions(requiredExtensions);
 
-    // 2. We need a way to give these to the instance. 
-    // Since you already constructed instance_, add a setter or 
-    // pass them directly to setup.
-
-    instance_.setExtensions(requiredExtensions); // You'll need to add this method
     instance_.setup();
 
     validation_.setup(instance_.getInstance());
