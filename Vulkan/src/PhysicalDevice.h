@@ -1,20 +1,19 @@
 #pragma once
 
 #include <vulkan/vulkan.h>
-#include "Instance.h"
 #include <cstdint>
 
 class PhysicalDevice {
 public:
-	PhysicalDevice() = default;
-	~PhysicalDevice() = default;
-
-	void setup();
+	
+	void setup(VkInstance instance);
 	void destroy();
 
 	VkPhysicalDevice getPhysicalDevice() const { return physicalDevice_; }
+	bool isDeviceSuitable(VkPhysicalDevice device);
 
 private:
 	VkPhysicalDevice physicalDevice_ = VK_NULL_HANDLE;
-	Instance* instance_;
+
+
 };

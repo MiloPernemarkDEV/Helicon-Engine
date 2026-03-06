@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="src\Instance.cpp" />
     <ClCompile Include="src\PhysicalDevice.cpp" />
+    <ClCompile Include="src\Queues.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Validation.cpp" />
   </ItemGroup>
@@ -32,6 +33,7 @@
     <ClInclude Include="src\Instance.h" />
     <ClInclude Include="src\IRenderer.h" />
     <ClInclude Include="src\PhysicalDevice.h" />
+    <ClInclude Include="src\Queues.h" />
     <ClInclude Include="src\RendDefines.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Validation.h" />
