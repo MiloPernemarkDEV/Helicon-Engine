@@ -40,7 +40,7 @@ Modules are optional subsystems implemented as separate dynamic libraries. They 
 - STL
 - Win32 (Windows platform layer)
 - X11 (Linux platform layer)
-- Vulkan Graphics API 
+- Vulkan Graphics API
 
 ---
 
