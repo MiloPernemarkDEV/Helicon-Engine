@@ -95,16 +95,6 @@ To maintain readability and consistency across Helicon, follow these rules:
 - Match the main class: `ClassName.h` / `ClassName.cpp`  
 - Example: `Renderer.h` / `Renderer.cpp`
 
-## Project Status
-
-Helicon is currently in active development. Core systems are being established and expanded, while modules are implemented incrementally.
-
----
-
-## Philosophy
-
-Helicon prioritizes modularity and explicit system design over heavy abstraction. The goal is to provide a flexible foundation where systems are transparent, composable, and easy to reason about.
-
 ---
 
 ## Contributing
