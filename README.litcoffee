@@ -2,17 +2,17 @@
 
 Helicon is a modular C++ game engine built around a core-and-module architecture, designed to provide explicit control, flexibility, and scalability.
 
-The engine consists of a central core dll and optional subsystems called modules. The core provides foundational systems required for all applications, while modules can be selectively included depending on project needs. This design prioritizes modularity, separation of concerns, and long-term maintainability.
+The engine consists of a central core statically linked library and optional subsystems called modules. The core provides foundational systems required for all applications, while modules can be selectively included depending on project needs. This design prioritizes modularity, separation of concerns, and long-term maintainability.
 
 ## Architecture Overview
 
 Helicon is split into two main parts:
 
 ### Core
-The core is always included and provides essential engine functionality. It is compiled as a dynamic library and acts as the foundation for all projects.
+The core is always included and provides essential engine functionality. It is compiled as a statically linked library and acts as the foundation for all projects.
 
 ### Modules
-Modules are optional subsystems implemented as separate dynamic libraries. They can be included as needed, allowing developers to tailor the engine to their specific use case.
+Modules are optional subsystems implemented as separate statically linked libraries. They can be included as needed, allowing developers to tailor the engine to their specific use case.
 
 ## Development Prerequisites
 
