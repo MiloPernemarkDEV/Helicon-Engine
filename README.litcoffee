@@ -53,7 +53,7 @@ Contributions are welcome, especially from students or developers interested in 
 ### Guidelines
 
 - Have fun!
-- Follow existing naming conventions and code style  
+- Follow existing naming conventions and code style (found below)
 - Avoid unnecessary abstractions  
 - Prefer clarity and explicit behavior over “clever” solutions  
 
