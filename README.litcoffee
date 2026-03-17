@@ -39,56 +39,6 @@ Modules are optional subsystems implemented as separate dynamic libraries. They 
 
 ---
 
-## Naming Conventions
-
-To maintain readability and consistency across Helicon, follow these rules:
-
-### Classes & Structs
-- `ClassName` — PascalCase for classes and structs  
-- Example: `Renderer`, `PhysicsSystem`
-
-### Functions & Methods
-- `functionName` — camelCase for member and free functions  
-- Example: `updateFrame()`, `loadTexture()`
-
-### Member Variables
-- `m_memberVariable` — prefix with `m_`  
-- Example: `m_position`, `m_velocity`
-
-### Local Variables
-- `localVariable` — plain camelCase for function-local variables  
-- Example: `deltaTime`, `loopIndex`
-
-### Static Variables
-- `s_staticVariable` — prefix with `s_`  
-- Example: `s_instanceCount`
-
-### Boolean Variables
-- Use descriptive prefixes: `is`, `has`, `can`  
-- Example: `isVisible`, `hasFocus`, `canExecute`
-
-### Macros
-- `MACRO_NAME` — all uppercase  
-- Example: `MAX_BUFFER_SIZE`
-
-### Constants
-- `CONSTANT_NAME` — all uppercase  
-- Example: `PI`, `DEFAULT_SCREEN_WIDTH`
-
-### Enum Values
-- `ENUM_VALUE` — all uppercase with underscores  
-- Example: `RENDER_MODE_WIREFRAME`
-
-### Namespaces
-- `NamespaceName` — PascalCase  
-- Example: `Helicon::Renderer`
-
-### File Names
-- Match the main class: `ClassName.h` / `ClassName.cpp`  
-- Example: `Renderer.h` / `Renderer.cpp`
-
----
-
 ## Contributing
 
 Contributions are welcome, especially from students or developers interested in engine architecture and systems programming.
@@ -96,11 +46,9 @@ Contributions are welcome, especially from students or developers interested in 
 ### Getting Started
 
 1. Fork the repository  
-2. Create a new branch: git checkout -b feature/your-feature-name
+2. Create a new branch: git checkout -b feature/your-feature-name  
 3. Make your changes with clear, focused commits  
 4. Push your branch and open a pull request  
-
----
 
 ### Guidelines
 
@@ -109,8 +57,6 @@ Contributions are welcome, especially from students or developers interested in 
 - Avoid unnecessary abstractions  
 - Prefer clarity and explicit behavior over “clever” solutions  
 
----
-
 ### Areas for Contribution
 
 - Engine modules (rendering, UI, tools, etc.)  
@@ -118,17 +64,70 @@ Contributions are welcome, especially from students or developers interested in 
 - Debugging and profiling tools  
 - Documentation and examples  
 
----
-
 ### Notes
 
 This project is primarily developed as a learning and exploration platform for engine development. Contributions should align with the overall design goals of modularity, simplicity, and explicit control.
 
+### Naming Conventions
+
+To maintain readability and consistency across Helicon, follow these rules:
+
+#### Classes & Structs
+- `ClassName` — PascalCase for classes and structs  
+- Example: `Renderer`, `PhysicsSystem`
+
+#### Functions & Methods
+- `functionName` — camelCase for member and free functions  
+- Example: `updateFrame()`, `loadTexture()`
+
+#### Member Variables
+- `m_memberVariable` — prefix with `m_`  
+- Example: `m_position`, `m_velocity`
+
+#### Local Variables
+- `localVariable` — plain camelCase for function-local variables  
+- Example: `deltaTime`, `loopIndex`
+
+#### Static Variables
+- `s_staticVariable` — prefix with `s_`  
+- Example: `s_instanceCount`
+
+#### Boolean Variables
+- Use descriptive prefixes: `is`, `has`, `can`  
+- Example: `isVisible`, `hasFocus`, `canExecute`
+
+#### Macros
+- `MACRO_NAME` — all uppercase  
+- Example: `MAX_BUFFER_SIZE`
+
+#### Constants
+- `CONSTANT_NAME` — all uppercase  
+- Example: `PI`, `DEFAULT_SCREEN_WIDTH`
+
+#### Enum Values
+- `ENUM_VALUE` — all uppercase with underscores  
+- Example: `RENDER_MODE_WIREFRAME`
+
+#### Namespaces
+- `NamespaceName` — PascalCase  
+- Example: `Helicon::Renderer`
+
+#### File Names
+- Match the main class: `ClassName.h` / `ClassName.cpp`  
+- Example: `Renderer.h` / `Renderer.cpp`
+
+#### Pointers & References (Optional)
+- `pPointer` — prefix pointers with `p_`  
+- `rReference` — prefix references with `r_`  
+- Example: `pTexture`, `rWindow`
+
+---
+
 ## Design Goals
 
-- **Modularity** — Systems are decoupled and can be added or removed without affecting the core.
-- **Explicit Control** — Low-level access is preferred over heavy abstraction.
-- **Scalability** — Designed to support both small and large projects.
+- **Modularity** — Systems are decoupled and can be added or removed without affecting the core.  
+- **Explicit Control** — Low-level access is preferred over heavy abstraction.  
+- **Scalability** — Designed to support both small and large projects.  
 - **Maintainability** — Clear system boundaries to reduce long-term complexity.
 
 ---
