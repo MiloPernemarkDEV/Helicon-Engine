@@ -1,4 +1,4 @@
-# Naming Conventions
+# Helicon Naming Conventions
 
 To maintain readability and consistency across Helicon, follow these rules when contributing code.
 
