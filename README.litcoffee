@@ -32,6 +32,8 @@ Modules are optional subsystems implemented as separate dynamic libraries. They 
 - C++20
 - Visual Studio / CLion / Rider
 - Git
+- **Vulkan SDK** — required for the Vulkan Rendering Abstraction Layer  
+  Download from: [https://vulkan.lunarg.com/sdk/home](https://vulkan.lunarg.com/sdk/home)
 
 ---
 
