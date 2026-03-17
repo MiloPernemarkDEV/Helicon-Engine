@@ -21,6 +21,7 @@ To maintain readability and consistency across Helicon, follow these rules when 
 
 ## Macros & Constants
 - `MACRO_NAME` — all uppercase  
+- `CONSTANT_NAME`
 
 ## Enums
 - Use **enum_value** snake_case for enum names and their values  
