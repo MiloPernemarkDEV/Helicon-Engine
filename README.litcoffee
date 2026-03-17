@@ -30,7 +30,7 @@ Modules are optional subsystems implemented as separate statically linked librar
 - stb_image
 - Assimp 
 - Dear ImGui (UI)
-These are the current external libraries, this list will grow :)
+- These are the current external libraries, this list will grow :)
 
 ## Contributing
 
