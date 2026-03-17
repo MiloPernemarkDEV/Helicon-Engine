@@ -26,9 +26,6 @@ To maintain readability and consistency across Helicon, follow these rules when 
 ## Enums
 - Use **enum_value** — snake_case for enum names and their values  
 
-## Namespaces
-- `NamespaceName` — PascalCase  
-
 ## File Names
 - Match the main class: `snake_case.h` / `snake_case.cpp` 
 - prefer writing prefixing with the context of the file 
@@ -37,3 +34,4 @@ To maintain readability and consistency across Helicon, follow these rules when 
 ---
 
 **Note:** Following these conventions helps keep the codebase consistent, readable, and maintainable for all contributors.
+With that in mind, you are not forced to follow any rule but you know it makes it better for everyone.
