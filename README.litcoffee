@@ -65,10 +65,6 @@ Contributions are welcome, especially from students or developers interested in 
 - Debugging and profiling tools  
 - Documentation and examples  
 
-### Notes
-
-This project is primarily developed as a learning and exploration platform for engine development. Contributions should align with the overall design goals of modularity, simplicity, and explicit control.
-
 ### Naming Conventions
 
 To maintain readability and consistency across Helicon, follow these rules:
