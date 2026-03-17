@@ -55,7 +55,7 @@ Contributions are welcome, especially from students or developers interested in 
 - Have fun!
 - Follow existing naming conventions and code style (found below)
 - Avoid unnecessary abstractions, an article on "clean" code by Casey Muratori - https://www.computerenhance.com/p/clean-code-horrible-performance
-- Prefer clarity and explicit behavior over “clever” solutions  
+- Prefer clarity and explicit behavior
 
 ### Areas for Contribution
 
