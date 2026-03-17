@@ -2,16 +2,8 @@
 //
 
 #include <iostream>
-#include "Vec3.h"
 #include "Vec3OpsTest.h"
 
-int main()
-{
-    // std::cout << "Hello World!\n";
-    // Vec3OpsTest::RunVec3Tests();
-
-
-}
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu
