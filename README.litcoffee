@@ -27,39 +27,6 @@ Modules are optional subsystems implemented as separate dynamic libraries. They 
 
 ---
 
-## Core Systems
-
-These systems are always included and form the foundation of the engine.
-
-### Logger
-Centralized logging system with support for severity levels, debugging output, and runtime diagnostics.
-
-### Platform Layer
-Abstracts platform-specific functionality such as window creation, input handling, and OS interaction, enabling cross-platform support.
-
-### Asset / Resource System
-Handles loading, caching, and lifetime management of assets (textures, models, shaders) to ensure efficient memory usage.
-
-### Job System
-Lightweight multithreading system for scheduling and executing tasks across multiple threads.
-
----
-
-## Modules
-
-Modules are optional subsystems that can be included as needed.
-
-### UI Abstraction Layer
-Provides a unified interface for UI systems (such as ImGui), allowing the underlying implementation to be swapped without affecting engine code.
-
-### In-Game Overlay Editor
-Runtime debugging and editing tools for inspecting and modifying game state in real time.
-
-### Vulkan Rendering Abstraction Layer
-Encapsulates low-level Vulkan API complexity into a structured and reusable rendering interface.
-
----
-
 ## Development Prerequisites
 
 - C++20
