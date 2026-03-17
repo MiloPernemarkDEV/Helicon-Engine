@@ -24,7 +24,7 @@ To maintain readability and consistency across Helicon, follow these rules when 
 - `CONSTANT_NAME` — all uppercase  
 
 ## Enums
-- Use **enum_value** snake_case for enum names and their values  
+- Use **enum_value** — snake_case for enum names and their values  
 
 ## Namespaces
 - `NamespaceName` — PascalCase  
