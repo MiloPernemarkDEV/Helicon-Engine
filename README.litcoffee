@@ -54,9 +54,8 @@ Contributions are welcome, especially from students or developers interested in 
 
 - Have fun!
 - Follow existing naming conventions and code style (found below)
-- Avoid unnecessary abstractions  
+- Avoid unnecessary abstractions, an article on "clean" code by Casey Muratori - https://www.computerenhance.com/p/clean-code-horrible-performance
 - Prefer clarity and explicit behavior over “clever” solutions  
-- Rethink "clean code", here is an article by Casey Muratori on this, https://www.computerenhance.com/p/clean-code-horrible-performance
 
 ### Areas for Contribution
 
@@ -64,6 +63,7 @@ Contributions are welcome, especially from students or developers interested in 
 - Platform layer improvements  
 - Debugging and profiling tools  
 - Documentation and examples  
+
 
 ### Naming Conventions
 
