@@ -56,6 +56,7 @@ Contributions are welcome, especially from students or developers interested in 
 - Follow existing naming conventions and code style  
 - Avoid unnecessary abstractions  
 - Prefer clarity and explicit behavior over “clever” solutions  
+- Follow the naming conventions as much as you can, you can find them below
 
 ### Areas for Contribution
 
