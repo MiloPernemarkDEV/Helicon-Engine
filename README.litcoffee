@@ -6,15 +6,6 @@ The engine consists of a central core dll and optional subsystems called modules
 
 ---
 
-## Design Goals
-
-- **Modularity** — Systems are decoupled and can be added or removed without affecting the core.
-- **Explicit Control** — Low-level access is preferred over heavy abstraction.
-- **Scalability** — Designed to support both small and large projects.
-- **Maintainability** — Clear system boundaries to reduce long-term complexity.
-
----
-
 ## Architecture Overview
 
 Helicon is split into two main parts:
@@ -132,3 +123,12 @@ Contributions are welcome, especially from students or developers interested in 
 ### Notes
 
 This project is primarily developed as a learning and exploration platform for engine development. Contributions should align with the overall design goals of modularity, simplicity, and explicit control.
+
+## Design Goals
+
+- **Modularity** — Systems are decoupled and can be added or removed without affecting the core.
+- **Explicit Control** — Low-level access is preferred over heavy abstraction.
+- **Scalability** — Designed to support both small and large projects.
+- **Maintainability** — Clear system boundaries to reduce long-term complexity.
+
+---
