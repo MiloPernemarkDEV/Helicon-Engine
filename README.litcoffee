@@ -67,5 +67,5 @@ Contributions are welcome, especially from students or developers interested in 
 
 - **Modularity** — Systems are decoupled and can be added or removed without affecting the core.  
 - **Explicit Control** — Low-level access is preferred over heavy abstraction.  
-- **Scalability** — Designed to support both small and large projects.  
+- **Scalability** — Support both small and large projects.  
 - **Maintainability** — Clear system boundaries to reduce long-term complexity.
