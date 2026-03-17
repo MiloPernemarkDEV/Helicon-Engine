@@ -52,11 +52,10 @@ Contributions are welcome, especially from students or developers interested in 
 
 ### Guidelines
 
-- Keep systems modular and decoupled from the core  
+- Have fun!
 - Follow existing naming conventions and code style  
 - Avoid unnecessary abstractions  
 - Prefer clarity and explicit behavior over “clever” solutions  
-- Follow the naming conventions as much as you can, you can find them below
 
 ### Areas for Contribution
 
