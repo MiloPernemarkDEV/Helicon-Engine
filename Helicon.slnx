@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Engine/Engine.vcxproj" Id="af7f7244-7da7-4a0c-95fd-84b604dccb54" />
+  <Project Path="HeliMath/HeliMath.vcxproj" Id="9e71c598-81c1-42b5-a7d5-d0828001cfba" />
+  <Project Path="Renderer/Renderer.vcxproj" Id="82515b55-fc10-4648-b034-f68438816290" />
+</Solution>

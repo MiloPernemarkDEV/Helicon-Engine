@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{c2670859-9608-4ebd-93f8-227490d057a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Public">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Core\Private">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Private\app_config.cpp">
+      <Filter>Core\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\application.cpp">
+      <Filter>Core\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\engine_arena.cpp">
+      <Filter>Core\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\engine_assert.cpp">
+      <Filter>Core\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\engine_config.cpp">
+      <Filter>Core\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\engine_types.cpp">
+      <Filter>Core\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\main.cpp">
+      <Filter>Core\Private</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Public\app_config.h">
+      <Filter>Core\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\application.h">
+      <Filter>Core\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\engine_arena.h">
+      <Filter>Core\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\engine_assert.h">
+      <Filter>Core\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\engine_config.h">
+      <Filter>Core\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\engine_settings.h">
+      <Filter>Core\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\engine_types.h">
+      <Filter>Core\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\object_loader.h">
+      <Filter>Core\Public</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
