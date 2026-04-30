@@ -14,9 +14,6 @@
     <ClCompile Include="HeliMath.cpp">
       <Filter>Private</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Public\mat4x4.cpp">
-      <Filter>Private</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\vec3.h">
@@ -29,6 +26,9 @@
       <Filter>Public</Filter>
     </ClInclude>
     <ClInclude Include="Source\Public\math_util.h">
+      <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\vec4.h">
       <Filter>Public</Filter>
     </ClInclude>
   </ItemGroup>

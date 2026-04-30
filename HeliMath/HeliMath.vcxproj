@@ -147,10 +147,10 @@
     <ClInclude Include="Source\Public\math_defines.h" />
     <ClInclude Include="Source\Public\math_util.h" />
     <ClInclude Include="Source\Public\vec3.h" />
+    <ClInclude Include="Source\Public\vec4.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HeliMath.cpp" />
-    <ClCompile Include="Source\Public\mat4x4.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
