@@ -179,6 +179,8 @@ struct Mat4x4 {
 		return r;
 	}
 
+
+
 	HELI_FORCE_INLINE static Mat4x4 reflect_plane(const Vec3& n) noexcept {
 		Mat4x4 r{};	
 
@@ -224,87 +226,6 @@ struct Mat4x4 {
 		r.m11 = 1.0f;
 		r.m22 = 1.0f;
 		r.m33 = -1.0f;
-		return r;
-	}
-
-	HELI_FORCE_INLINE static Mat4x4 translate(const Vec3& v) noexcept {
-		Mat4x4 r{};
-
-		r.m11 = 1.0f;
-		r.m22 = 1.0f;
-		r.m33 = 1.0f;
-		r.m44 = 1.0f;
-
-		r.m14 = v.x;
-		r.m24 = v.y;
-		r.m34 = v.z;
-
-		return r;
-	}
-
-	HELI_FORCE_INLINE Vec4 transform(const Vec4& v) const noexcept {
-		Vec4 r{};
-
-		r.x = v.x * m11 + v.y * m21 + v.z * m31 + v.w * m41;
-		r.y = v.x * m12 + v.y * m22 + v.z * m32 + v.w * m42;
-		r.z = v.x * m13 + v.y * m23 + v.z * m33 + v.w * m43;
-		r.w = v.x * m14 + v.y * m24 + v.z * m34 + v.w * m44;
-
-		return r;
-	}
-
-	HELI_FORCE_INLINE Vec3 transform_point(const Vec3& v) const noexcept {
-		Vec4 r = transform(Vec4(v.x, v.y, v.z, 1.0f));
-		return Vec3(r.x, r.y, r.z);
-	}
-
-	HELI_FORCE_INLINE Vec3 transform_direction(const Vec3& v) const noexcept {
-		Vec4 r = transform(Vec4(v.x, v.y, v.z, 0.0f));
-		return Vec3(r.x, r.y, r.z);
-	}
-
-	HELI_FORCE_INLINE static Mat4x4 perspective(
-		float fov_radians,
-		float aspect,
-		float near_plane,
-		float far_plane) noexcept
-	{
-		Mat4x4 r{};
-
-		float f = 1.0f / std::tan(fov_radians * 0.5f);
-		float range_inv = 1.0f / (near_plane - far_plane);
-
-		r.m11 = f / aspect;
-		r.m22 = f;
-		r.m33 = (far_plane + near_plane) * range_inv;
-		r.m34 = -1.0f;
-
-		r.m43 = (2.0f * far_plane * near_plane) * range_inv;
-		r.m44 = 0.0f;
-
-		return r;
-	}
-
-	HELI_FORCE_INLINE static Mat4x4 orthographic(
-		float left,
-		float right,
-		float bottom,
-		float top,
-		float near_plane,
-		float far_plane) noexcept
-	{
-		Mat4x4 r{};
-
-		r.m11 = 2.0f / (right - left);
-		r.m22 = 2.0f / (top - bottom);
-		r.m33 = -2.0f / (far_plane - near_plane);
-
-		r.m14 = -(right + left) / (right - left);
-		r.m24 = -(top + bottom) / (top - bottom);
-		r.m34 = -(far_plane + near_plane) / (far_plane - near_plane);
-
-		r.m44 = 1.0f;
-
 		return r;
 	}
 };
